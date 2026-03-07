@@ -12,16 +12,26 @@
 
 ### Custom Forms
 
-- [] create custom user register form
-- [] create custom login form
+- [x] template setup for working with forms
+- [x] create custom user register form
+- [x] create custom login form
 - [] profile form
 - [] address form
 
+### urls 
+- [x] create account/urls.py file to manage account urls endpoints.
 
 ### views
 
-- [] create register view
-- [] create login view
-- [] create logout view
+- [x] create register view
+- [x] create login view
+- [x] create logout view
 - [] create dashboard (for admin access) -> CURD operation with products
 - [] create profile view
+- [] change password
+- [] reset password
+
+### Debug and auto reload setup
+
+- [x] Django debug toolbar setup
+- [x] Django auto reload browser setup

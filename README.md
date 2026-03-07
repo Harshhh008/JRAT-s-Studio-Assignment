@@ -14,6 +14,10 @@
 
 `pip install python-decouple` # for working with secret data
 
+`pip install django-debug-toolbar` # for debugging django querysets
+
+`pip install django-browser-reload` # for auto reloading django pages if any changes occurs
+
 ### Step 2 : Project Setup.
 
 1. account -> which is contains all authentication related logics
