@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'account' # authentication
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -121,3 +122,17 @@ STATIC_URL = 'static/'
 
 # Global config for custom user model
 AUTH_USER_MODEL = 'account.User'
+
+
+#Debug toolbar setup
+if DEBUG:
+    INSTALLED_APPS += "debug_toolbar",
+    MIDDLEWARE += "debug_toolbar.middleware.DebugToolbarMiddleware",
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
+
+#Live reload setup
+if DEBUG:
+    INSTALLED_APPS += "django_browser_reload",
+    MIDDLEWARE += "django_browser_reload.middleware.BrowserReloadMiddleware",
