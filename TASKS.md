@@ -51,3 +51,8 @@
 - [] delete product
 - [] list of all product
 - [] get product details(unique)
+
+## Media File setup for working with images in development
+
+- [x] configure media files root inside settings.py
+- [x] attach root path with url so we can see images inside browser
