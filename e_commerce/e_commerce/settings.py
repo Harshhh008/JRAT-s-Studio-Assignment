@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'account', # authentication
-    'products' # product data
+    'products', # product data
+    'utils' # utilities for automation work
 ]
 
 

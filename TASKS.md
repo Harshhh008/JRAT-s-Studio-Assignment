@@ -56,3 +56,9 @@
 
 - [x] configure media files root inside settings.py
 - [x] attach root path with url so we can see images inside browser
+
+## Custom commands
+
+- [x] create utils apps for making some functionality or automation works.
+- [x] create folder management/commands for working with cli commands
+- [x] create custom commands for running makemigrations, migrate, superuser automatically
