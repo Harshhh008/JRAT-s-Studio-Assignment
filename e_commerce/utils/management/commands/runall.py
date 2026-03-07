@@ -5,13 +5,16 @@ User = get_user_model()
 
 
 class Command(BaseCommand):
-    help_text = "run all initial commands if any changes happen with models."
+    help = "run all initial commands if any changes happen with models."
 
-    def handle(self):
-        call_command("makemigrations")
-        call_command("migrate")
+    def handle(self, *args, **options):
+        try:
+          call_command("makemigrations")
+          call_command("migrate")
 
-        if not User.objects.filter(is_superuser=True).exists():
-            call_command("createsuperuser")
+          if not User.objects.filter(is_superuser=True).exists():
+              call_command("createsuperuser")
 
-        call_command("runserver")
+          call_command("runserver")
+        except Exception as e:
+          print(str(e))
