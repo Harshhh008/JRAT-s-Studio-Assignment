@@ -31,7 +31,23 @@
 - [] change password
 - [] reset password
 
-### Debug and auto reload setup
+## Debug and auto reload setup
 
 - [x] Django debug toolbar setup
 - [x] Django auto reload browser setup
+
+## Product (product related operations)
+
+### model
+
+- [x] category model setup fields (id, name, created_at, updated_at)
+- [x] product model setup fields (id, name, category(foreign_key), description, quantity, price, created_at, updated_at)
+- [x] product image model setup fields (id, image, product(foreign_key), created_at, updated_at)
+
+### views
+
+- [] create product
+- [] update product
+- [] delete product
+- [] list of all product
+- [] get product details(unique)
