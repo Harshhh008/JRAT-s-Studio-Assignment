@@ -46,11 +46,12 @@
 
 ### views
 
-- [] create product
+- [x] create product
 - [] update product
 - [] delete product
 - [] list of all product
 - [] get product details(unique)
+- [] add url in html file for unique product add image
 
 ## Media File setup for working with images in development
 

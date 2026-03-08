@@ -1,0 +1,5 @@
+<form action="" method='POST'>
+  {% csrf_token %}
+  {{product_image_form.as_p}}
+  <input type="submit" value="Add Image">
+</form>

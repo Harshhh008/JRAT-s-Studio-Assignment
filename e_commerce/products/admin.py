@@ -28,5 +28,5 @@ class ProductAdmin(admin.ModelAdmin):
   prepopulated_fields = {
     "product_slug": ('product_name',)
   }
+  ordering = ['-updated_at']
   
-
