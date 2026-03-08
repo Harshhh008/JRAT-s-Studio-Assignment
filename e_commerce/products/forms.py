@@ -16,3 +16,13 @@ class ProductImageForm(forms.ModelForm):
   class Meta:
     model = ProductImage
     fields = ['image']
+  
+  def __init__(self, *args, **kwargs):
+    self.product = kwargs.pop('product', None)
+    super().__init__(*args, **kwargs)
+  
+  def clean_image(self):
+    image = self.cleaned_data.get('image')
+    if self.product and ProductImage.objects.filter(image=image.name).exists():
+      raise forms.ValidationError('Image already exist.')
+    return image
