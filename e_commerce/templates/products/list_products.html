@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Product List</h1>
+{% if 'category' in request.path %}<a href="{% url 'category_update' category_id %}">Update This Category</a> |
+<a href="{% url 'category_delete' category_id %}">Delete This Category</a> |{% endif %}
 <a href="{% url 'create_product' %}">Add New Product</a><br></br>
   {% for product in products %}
   <img src="{{product.product_image.all.0.image.url }}" alt="{{product.name}}"><br>

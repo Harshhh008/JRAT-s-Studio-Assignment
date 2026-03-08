@@ -49,6 +49,7 @@
 - [x] create product
 - [x] update product
 - [x] delete product
+- [x] crud operation on category
 - [x] list of all product
 - [x] get product details(unique)
 - [x] add url in html file for unique product add image

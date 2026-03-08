@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Category, ProductImage
 from .forms import ProductForm, CategoryForm, ProductImageForm
+from django.db.models import Count
 
 
 def create_category(request):
@@ -13,6 +14,28 @@ def create_category(request):
     return render(
         request, "products/category_form.html", {"category_form": category_form}
     )
+
+def update_category(request, pk):
+    category = get_object_or_404(Category, id=pk)
+    if request.method == "POST":
+        category_form = CategoryForm(request.POST, instance=category)
+        category_form.save() if category_form.is_valid() else category_form.errors()
+        return redirect('list_product')
+    category_form = CategoryForm(instance=category)
+    return render(request, 'products/category_form.html', {'category_form': category_form})
+
+def delete_category(request, pk):
+    category = get_object_or_404(Category, id=pk)
+    try:
+        product_exist = Category.objects.annotate(product_count = Count('product')).get(id=pk)
+        if  product_exist.product_count > 0:
+            print("You can not delete this category because product in this category is exist")
+        else:
+            category.delete()
+    except Exception as e:
+        print(str(e))
+    return redirect('list_product')
+
 
 
 def create_product(request):
@@ -59,7 +82,7 @@ def list_product(request, pk=None):
             .prefetch_related("product_image")
             .all()
         )
-    return render(request, "products/list_products.html", {"products": products})
+    return render(request, "products/list_products.html", {"products": products, "category_id": pk if pk else None})
 
 
 def get_product(request, pk):
