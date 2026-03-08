@@ -1,4 +1,6 @@
-<p>Are you sure for remove '{{product.product_name}}' this product?</p>
+<p>Are you sure for remove '<b>{{product.product_name}}</b>' product?</p>
 <form action="" method="POST">
+  {% csrf_token %}
   <input type="submit" value="remove">
 </form>
+<a href="{% url 'get_product' product.id %}">Go Back</a>

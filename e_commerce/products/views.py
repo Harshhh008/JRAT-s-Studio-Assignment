@@ -86,10 +86,7 @@ def edit_product(request, pk):
 
 def remove_product(request, pk):
     product = get_object_or_404(Product, id=pk)
-    try:
-        if request.method == "POST":
-            product.delete()
-        else:
-            return redirect("list_product")
-    except product.DoesNotExist:
+    if request.method == "POST":
+        product.delete()
         return redirect("list_product")
+    return render(request, 'products/remove_product.html', {'product': product})

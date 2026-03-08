@@ -10,4 +10,4 @@
 <strong>Price</strong>:{{product.price}}<br>
 <a href="{% url 'add_images' product.id %}">Add Product Image</a> |
 <a href="{% url 'edit_product' product.id %}">Edit Product</a> |
-<a href="">Delete Product</a>
+<a href="{% url 'remove_product' product.id %}">Remove Product</a>
