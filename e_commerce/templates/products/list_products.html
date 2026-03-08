@@ -11,7 +11,8 @@
   <strong>Description </strong>: {{product.description}}<br>
   <strong>Available Stock</strong>:{{product.stock}}<br>
   <strong>Price</strong>:{{product.price}}<br>
-  <a href="{% url 'get_product' product.id %}">View Product Detail</a>
+  <a href="{% url 'get_product' product.id %}">View Product Detail</a> |
+  <a href="">Add to cart</a> 
   {% if not forloop.last %}
   <hr>
   {% endif %}

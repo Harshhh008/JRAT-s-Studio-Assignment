@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account', # authentication
     'products', # product data
-    'utils' # utilities for automation work
+    'utils', # utilities for automation work
+    'cart',
 ]
 
 

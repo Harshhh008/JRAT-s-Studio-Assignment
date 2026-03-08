@@ -64,3 +64,11 @@
 - [x] create utils apps for making some functionality or automation works.
 - [x] create folder management/commands for working with cli commands
 - [x] create custom commands for running makemigrations, migrate, superuser automatically
+
+## Cart Functionality
+
+- [x] create app cart
+- [] model : cart(unique for each user) and cartitem(store products + unique_cart_id)
+- [] view cart functionality
+- [] add to cart product functionality
+- [] delete product from cart functionality
