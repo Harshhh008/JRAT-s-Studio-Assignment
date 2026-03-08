@@ -68,7 +68,7 @@
 ## Cart Functionality
 
 - [x] create app cart
-- [] model : cart(unique for each user) and cartitem(store products + unique_cart_id)
+- [x] model : cart(unique for each user) and cartitem(store products + unique_cart_id)
 - [] view cart functionality
 - [] add to cart product functionality
 - [] delete product from cart functionality
