@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'products.context_processors.category_list'
             ],
         },
     },
@@ -133,9 +134,10 @@ AUTH_USER_MODEL = 'account.User'
 #Debug toolbar setup
 if DEBUG:
     INSTALLED_APPS += "debug_toolbar",
-    MIDDLEWARE += "debug_toolbar.middleware.DebugToolbarMiddleware",
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
     INTERNAL_IPS = [
         "127.0.0.1",
+        "localhost",
     ]
 
 #Live reload setup

@@ -28,6 +28,6 @@ urlpatterns = [
 
 
 if getattr(settings, 'DEBUG'):
-    urlpatterns += debug_toolbar_urls()
-    urlpatterns +=  path("__reload__/", include("django_browser_reload.urls")),
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += debug_toolbar_urls()
+    urlpatterns += path("__reload__/", include("django_browser_reload.urls")),

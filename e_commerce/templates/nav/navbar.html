@@ -1,0 +1,12 @@
+<style>
+.nav{
+  display: flex; 
+  gap: 0 20px;
+}
+</style>
+
+<div class="nav">
+  {% for category in categories %}
+   <a href="#">{{category.category_name}}</a>
+  {% endfor %}
+</div>

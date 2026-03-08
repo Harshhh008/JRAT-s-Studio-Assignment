@@ -1,0 +1,9 @@
+<a href="{% url 'create_category' %}">{% if not 'edit' in request.path %}Create New Category{% endif %}</a>
+
+<form action="" method="POST">
+  <h1>{% if 'edit' in request.path %}Update{% else %}Create{% endif %} Product</h1>
+  {% csrf_token %}
+  {{product_form.as_p}}
+  {{product_image_form.as_p}}
+  <input type="submit" value="{% if 'edit' in request.path %}Update{% else %}Add{% endif %} Product"> 
+</form>

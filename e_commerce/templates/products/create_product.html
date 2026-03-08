@@ -1,8 +1,0 @@
-<a href="{% url 'create_category' %}">Create New Category</a>
-
-<form action="" method="POST">
-  {% csrf_token %}
-  {{product_form.as_p}}
-  {{product_image_form.as_p}}
-  <input type="submit" value="Add Product"> 
-</form>

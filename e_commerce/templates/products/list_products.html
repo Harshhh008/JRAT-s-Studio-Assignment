@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Product List</h1>
+<a href="{% url 'create_product' %}">Add New Product</a><br></br>
+  {% for product in products %}
+  <img src="{{product.product_image.all.0.image.url }}" alt="{{product.name}}"><br>
+  <strong>Product Name</strong>: {{product.product_name}}<br>
+  <strong>Category Name</strong>: {{product.category.category_name}}<br>
+  <strong>Description </strong>: {{product.description}}<br>
+  <strong>Available Stock</strong>:{{product.stock}}<br>
+  <strong>Price</strong>:{{product.price}}<br>
+  <a href="{% url 'get_product' product.id %}">View Product Detail</a>
+  {% if not forloop.last %}
+  <hr>
+  {% endif %}
+  {% endfor %}
+{% endblock content %}
