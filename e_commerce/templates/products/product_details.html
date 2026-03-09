@@ -6,8 +6,9 @@
 <strong>Product Name</strong>: {{product.product_name}}<br>
 <strong>Category Name</strong>: {{product.category.category_name}}<br>
 <strong>Description </strong>: {{product.description}}<br>
-<strong>Available Stock</strong>:{{product.stock}}<br>
+<strong>Available Stock</strong>:{% if product.stock > 0%}{{product.stock}}{% else %}Out of stock{% endif %}<br>
 <strong>Price</strong>:{{product.price}}<br>
 <a href="{% url 'add_images' product.id %}">Add Product Image</a> |
 <a href="{% url 'edit_product' product.id %}">Edit Product</a> |
-<a href="{% url 'remove_product' product.id %}">Remove Product</a>
+<a href="{% url 'remove_product' product.id %}">Remove Product</a> 
+{% if product.stock > 0%} | <a href="{% url 'add_to_cart' product.id %}">Add To Cart</a> {% endif %}

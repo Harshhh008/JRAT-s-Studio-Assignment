@@ -100,7 +100,7 @@ def edit_product(request, pk):
         product_form = ProductForm(request.POST, instance=product)
         if product_form.is_valid():
             product_form.save()
-            return redirect("product_list")
+            return redirect("list_product")
         else:
             print(product_form.errors)
     product_form = ProductForm(instance=product)

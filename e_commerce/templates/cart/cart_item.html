@@ -1,0 +1,15 @@
+{% for cart_item in cart_items %}
+<img src="{{cart_item.product.product_image.all.0.image.url }}" alt="{{product.name}}"><br>
+  <strong>Product Name</strong>: {{cart_item.product.product_name}}<br>
+  <strong>Description </strong>: {{cart_item.product.description}}<br>
+  <strong>Price </strong>: {{cart_item.product.price}}<br>
+  <strong>Quantity </strong>:{{cart_item.quantity}}<br>
+  <strong>Item Total </strong>:{{cart_item.item_total}}<br>
+  {% if cart_item.product.stock > 0%}<a href="{% url 'add_to_cart' cart_item.product.id %}">Increase Quantity</a> | {% endif %}
+  <a href="{% url 'remove_from_cart' cart_item.product.id %}">Decrease Quantity </a> 
+  {% if not foorloop.last %}
+    <hr>
+  {% endif %}
+{% endfor %}
+
+<center><h2>Sub Total : {{cart.total}}</h2></center>

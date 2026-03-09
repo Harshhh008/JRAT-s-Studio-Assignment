@@ -9,10 +9,10 @@
   <strong>Product Name</strong>: {{product.product_name}}<br>
   <strong>Category Name</strong>: {{product.category.category_name}}<br>
   <strong>Description </strong>: {{product.description}}<br>
-  <strong>Available Stock</strong>:{{product.stock}}<br>
+  <strong>Available Stock</strong>:{% if product.stock > 0 %}{{product.stock}}{% else %}Out Of Stock {% endif %}<br>
   <strong>Price</strong>:{{product.price}}<br>
-  <a href="{% url 'get_product' product.id %}">View Product Detail</a> |
-  <a href="">Add to cart</a> 
+  <a href="{% url 'get_product' product.id %}">View Product Detail</a> 
+  {% if product.stock > 0 %} | <a href="{% url 'add_to_cart' product.id %}">Add to cart</a> {% endif %}
   {% if not forloop.last %}
   <hr>
   {% endif %}

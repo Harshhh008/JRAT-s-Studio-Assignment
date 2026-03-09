@@ -1,13 +1,22 @@
 <style>
-.nav{
+.nav {
+  display: flex;
+  justify-content : space-between;
+}
+.cat{
   display: flex; 
   gap: 0 20px;
 }
 </style>
 
 <div class="nav">
+  <div class="cat">
   <a href="{% url 'list_product' %}">All</a>
   {% for category in categories %}
    <a href="{% url 'list_by_category' category.id %}">{{category.category_name}}</a>
   {% endfor %}
+  </div>
+  <div>
+  <a href="{% url 'cart_view' %}">View in Cart</a>
+  </div>
 </div>
