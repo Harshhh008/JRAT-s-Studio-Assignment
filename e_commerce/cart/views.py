@@ -28,16 +28,10 @@ def add_to_cart(request, pk):
         product=product, cart=cart
     )
 
-    if cart_item_created:
-        product.stock -= 1
-        product.save()
-        return redirect("cart_view")
-    else:
+    if not cart_item_created:
         if product.stock > 0:
             cart_item.quantity += 1
-            product.stock -= 1
             cart_item.save()
-            product.save()
             return redirect("cart_view")
         else:
             print("product out of stock")
@@ -56,11 +50,7 @@ def remove_from_cart(request, pk):
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
         cart_item.save()
-        product.stock += 1
-        product.save()
         return redirect("cart_view")
     else:
         cart_item.delete()
-        product.stock += 1
-        product.save()
         return redirect("cart_view")

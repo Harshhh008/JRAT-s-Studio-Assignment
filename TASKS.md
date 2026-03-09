@@ -78,3 +78,6 @@
 
 - [] model : order(every time generated new if order placed (foreign key)) and order item(store all items from the cart)
 - [] payment integration
+
+
+## pagination
