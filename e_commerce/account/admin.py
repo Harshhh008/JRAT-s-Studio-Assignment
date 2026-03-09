@@ -47,9 +47,6 @@ class UserAdmin(BaseAdmin):
       ),
     )
 
-    def get_username(self, obj):
-      print(obj)
-
 
 @admin.register(UserAddress)
 class UserAddressAdmin(admin.ModelAdmin):

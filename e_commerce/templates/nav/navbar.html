@@ -17,6 +17,9 @@
   {% endfor %}
   </div>
   <div>
+    <form action="{% url 'search_product' %}">
+      <input type="text" name="q" id="">
+    </form>
   <a href="{% url 'cart_view' %}">View in Cart</a>
   </div>
 </div>

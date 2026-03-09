@@ -53,6 +53,7 @@
 - [x] list of all product
 - [x] get product details(unique)
 - [x] add url in html file for unique product add image
+- [x] search product by category name and product name
 
 ## Media File setup for working with images in development
 
@@ -72,3 +73,8 @@
 - [x] view cart functionality
 - [x] add to cart product functionality
 - [x] delete product from cart functionality
+
+## Order Functionality
+
+- [] model : order(every time generated new if order placed (foreign key)) and order item(store all items from the cart)
+- [] payment integration

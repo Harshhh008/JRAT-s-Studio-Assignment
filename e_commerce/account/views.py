@@ -27,13 +27,11 @@ def user_login(request):
     if form.is_valid():
       email = form.cleaned_data.get('email', None)
       password = form.cleaned_data.get('password', None)
-      print(email, password)
 
       if not email and not password:
         messages.error(request, 'both fields are required')
 
       user = authenticate(email=email, password=password)
-      print(user)
 
       if not user:
         messages.error(request, 'invalid email or password.')

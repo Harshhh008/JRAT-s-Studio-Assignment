@@ -21,5 +21,8 @@ urlpatterns = [
     # update product
     path("edit/<uuid:pk>/", views.edit_product, name="edit_product"),
     # delete product
-    path("delete/<uuid:pk>/", views.remove_product, name="remove_product")
+    path("delete/<uuid:pk>/", views.remove_product, name="remove_product"),
+
+    # search product
+    path('search/', views.search_product, name='search_product')
 ]

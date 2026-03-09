@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Category, ProductImage
 from .forms import ProductForm, CategoryForm, ProductImageForm
 from django.db.models import Count
+from django.db.models import Q
 
 
 def create_category(request):
@@ -90,7 +91,6 @@ def get_product(request, pk):
         Product.objects.select_related("category").prefetch_related("product_image"),
         id=pk,
     )
-    print(product)
     return render(request, "products/product_details.html", {"product": product})
 
 
@@ -113,3 +113,11 @@ def remove_product(request, pk):
         product.delete()
         return redirect("list_product")
     return render(request, 'products/remove_product.html', {'product': product})
+
+def search_product(request):
+    q = request.GET.get('q')
+    products = Product.objects.select_related('category').filter(
+        Q(product_name__icontains=q) |
+        Q(category__category_name__icontains=q) 
+    )
+    return render(request, 'products/list_products.html', {'products': products})
