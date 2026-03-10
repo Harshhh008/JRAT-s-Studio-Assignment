@@ -15,8 +15,9 @@
 - [x] template setup for working with forms
 - [x] create custom user register form
 - [x] create custom login form
-- [] profile form
-- [] address form
+- [x] profile form
+- [x] address form
+- [x] order data in profile
 
 ### urls 
 - [x] create account/urls.py file to manage account urls endpoints.

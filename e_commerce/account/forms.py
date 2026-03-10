@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.contrib.auth import get_user_model
+from .models import UserAddress
 
 User = get_user_model()
 
@@ -27,3 +28,20 @@ class AuthenticationForm(forms.Form):
             raise forms.ValidationError("Email is required.")
         if not cleaned_data.get("password"):
             raise forms.ValidationError("Password is required.")
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            'email', 'first_name', 'last_name', 'phone_number', 'date_of_birth'
+        ]
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'})
+        }
+
+class UserAddressForm(forms.ModelForm):
+    class Meta:
+        model = UserAddress
+        fields = [
+            'house_num', 'building_name', 'area', 'city', 'state', 'pincode'
+        ]

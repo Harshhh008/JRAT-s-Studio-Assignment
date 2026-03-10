@@ -1,0 +1,7 @@
+<h1>{% if 'edit/address' in request.path%}Edit{% else %}Add New{% endif %} Address</h1>
+
+<form action="" method="POST"">
+  {% csrf_token %}
+  {{address_form.as_p}}
+  <input type="submit" value="{% if 'edit/address' in request.path %}Edit{% else %}Add{% endif %}">
+</form>

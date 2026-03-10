@@ -1,0 +1,6 @@
+<h2>Edit Your Profile</h2>
+<form action="" method="POST">
+  {% csrf_token %}
+  {{profile_form.as_p}}
+  <input type="submit" value="Update">
+</form>

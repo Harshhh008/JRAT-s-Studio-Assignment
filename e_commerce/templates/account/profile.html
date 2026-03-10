@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="right">
+        <strong>UserName: </strong> : {{user.username|default:''}}</br>
+        <strong>Email: </strong> : {{user.email}}</br>
+        <strong>FirstName: </strong> : {{user.first_name|default:''}}</br>
+        <strong>LastName: </strong> : {{user.last_name|default:''}}</br>
+        <strong>PhoneNumber: </strong> : {{user.phone_number|default:''}}</br>
+        <strong>Date Of Birth: </strong> : {{user.date_of_birth|default:''}}</br>
+        <a href="{% url 'edit_profile' user.id %}">Edit Profile</a>
+        <center><h4><u>Your Address</u></h4></center>
+        <a href="{% url 'add_address' %}">Add New Address</a><br>
+          {% for address in user_addresses %}
+            <u><strong>Address - {{forloop.counter}}</strong></u><br>
+            <strong>House Number: </strong> : {{address.house_num}}</br>
+            <strong>Building: </strong> : {{address.building_name}}</br>
+            <strong>Area: </strong> : {{address.area}}</br>
+            <strong>City: </strong> : {{address.city}}</br>
+            <strong>State: </strong> : {{address.state}}</br>
+            <strong>PinCode: </strong> : {{address.pincode}}</br>
+            <a href="{% url 'edit_address' address.id %} ">Edit</a>
+            {% if not foorloop.last %}
+            <hr>
+            {% endif %}
+          {% empty %}
+          <p>No Addresses</p>
+          {% endfor %}
+
+        <center><h4><u>Your Orders</u></h4></center>
+          {% for order in orders %}
+            <u><strong>Order - {{forloop.counter}}</strong></u><br>
+            <strong>Order ID: </strong> : {{order.order_id}}</br>
+            <strong>Order Status: </strong> : {{order.status}}</br>
+            <strong>Product: </strong> <br>
+            <ul>
+            {% for item in order.order_item.all %}
+            <li>{{item.product.product_name}} X <stong>{{item.quantity}}</strong> </li>
+            {% endfor %}
+            </ul>
+            <strong>Total Amount: </strong> : {{order.total_amount}}</br>
+            <strong>Shipping Address: </strong> : {{order.shipping_address}}</br>
+            <strong>Payment: </strong> : {{order.payment.status}}</br>
+            <strong>Date: </strong> : {{order.created_at}}</br>
+            {% if not foorloop.last %}
+            <hr>
+            {% endif %}
+          {% empty %}
+          <p>No Order</p>
+          {% endfor %}
+  </div>
+</div>
+
+{% endblock content%}

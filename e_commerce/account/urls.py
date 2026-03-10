@@ -5,4 +5,8 @@ urlpatterns = [
     path('register/', views.user_register, name="register"),
     path('login/', views.user_login, name="login"),
     path('logout/', views.user_logout, name="logout"),
+    path('profile/', views.profile, name="profile"),
+    path('edit-profile/<uuid:pk>/', views.edit_profile, name="edit_profile"),
+    path('new/address/', views.add_address, name="add_address"),
+    path('edit/address/<uuid:pk>/', views.edit_address, name="edit_address"),
 ]

@@ -3,13 +3,15 @@ from cart.models import CartItem, Cart
 from .models import Order, OrderItem, Payment
 import json
 from django.http import JsonResponse
+from account.models import UserAddress
 
 def create_order_from_cart(request):
   cart = Cart.objects.get(user=request.user)
+  address = UserAddress.objects.filter(user=request.user).first().full_address
 
   order = Order.objects.create(
     user = request.user,
-    shipping_address=request.user.address,
+    shipping_address=address,
     total_amount = cart.total,
     status="pending"
   )
