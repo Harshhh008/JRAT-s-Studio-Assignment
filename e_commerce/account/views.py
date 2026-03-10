@@ -27,6 +27,10 @@ def user_register(request):
 
 def user_login(request):
   """user login logic"""
+
+  # capture perticuler url if we not logged in
+  next_url = request.GET.get('next')
+
   if request.method == "POST":
     form = AuthenticationForm(request.POST)
     if form.is_valid():
@@ -44,7 +48,10 @@ def user_login(request):
       else:
         try:
           login(request ,user)
-          return redirect('list_product')
+          if next_url:
+            return redirect(next_url)
+          else:
+            return redirect('list_product')
         except Exception as e:
           print(str(e))
     else:

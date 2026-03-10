@@ -4,6 +4,7 @@ from .models import Order, OrderItem, Payment
 import json
 from django.http import JsonResponse
 from account.models import UserAddress
+from utils.email import purchase_email
 
 def create_order_from_cart(request):
   cart = Cart.objects.get(user=request.user)
@@ -78,6 +79,9 @@ def order_complete(request):
     # get all ordered data
     order = Order.objects.get(order_id=order_id)
     order_items = OrderItem.objects.select_related('product').filter(order=order)
+
+    #send email
+    purchase_email(request.user.email)
   except Exception as e:
     print(str(e))
   return render(request, 'order/order-complete.html', {'order_items': order_items,'order_id': order_id, 'payment_id': payment_id})
