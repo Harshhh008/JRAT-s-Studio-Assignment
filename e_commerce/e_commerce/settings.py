@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'products', # product data
     'utils', # utilities for automation work
     'cart',
+    'order',
+    "paypal.standard.ipn", # paypal app
 ]
 
 
@@ -145,3 +147,8 @@ if DEBUG:
 if DEBUG:
     INSTALLED_APPS += "django_browser_reload",
     MIDDLEWARE += "django_browser_reload.middleware.BrowserReloadMiddleware",
+
+
+# Paypal configuration
+PAYPAL_RECEIVER_EMAIL = 'harsh.businesssandbox@gmail.com'
+PAYPAL_TEST = True

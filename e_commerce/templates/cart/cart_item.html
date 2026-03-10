@@ -15,5 +15,5 @@
 {% endfor %}
 
 <center><h2>Sub Total : {{cart.total}}</h2>
-<a href="">Checkout</a>
+<a href="{% url 'create_order' %}">Proceed to Checkout</a>
 </center>

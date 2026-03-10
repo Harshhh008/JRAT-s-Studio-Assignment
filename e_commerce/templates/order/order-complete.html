@@ -1,0 +1,16 @@
+<h2>Order Complete</h2>
+
+<center><h4></h4></center>
+<strong>User</strong>: {{request.user.email}}<br>
+<strong>OrderID<strong>: {{order_id}}<br>
+<strong>PaymentID<strong>: {{payment_id}}<br>
+  <hr>
+{% for item in order_items %}
+<strong>OrderItemID</strong>: {{item.orderitem_id}}<br>
+<strong>Product</strong>: {{item.product.product_name}}<br>
+<strong>Product Price</strong>: {{item.product.price}}<br>
+<strong>quantity</strong>: {{item.quantity}}<br>
+<strong>Total</strong>: {{item.item_total}}<br>
+<hr>
+{% endfor %}
+<a href="{% url 'list_product' %}">Go To Home</a>

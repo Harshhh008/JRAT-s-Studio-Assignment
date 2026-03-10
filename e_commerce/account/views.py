@@ -39,7 +39,7 @@ def user_login(request):
       else:
         try:
           login(request ,user)
-          return HttpResponse('home page after login')
+          return redirect('list_product')
         except Exception as e:
           print(str(e))
     else:

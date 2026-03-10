@@ -20,13 +20,16 @@ def add_to_cart(request, pk):
     """
      pk = get product id 
      cart, create = if cart exist so get else create
-     cart_item = create new cart item if not exist else increase quantity with decrease stock 
+     cart_item = create new cart item if not exist else increase quantity 
     """
     cart, created = Cart.objects.get_or_create(user=request.user)
     product = get_object_or_404(Product, id=pk)
     cart_item, cart_item_created = CartItem.objects.get_or_create(
         product=product, cart=cart
     )
+
+    if cart_item_created:
+        return redirect('cart_view')
 
     if not cart_item_created:
         if product.stock > 0:
@@ -41,7 +44,7 @@ def remove_from_cart(request, pk):
     """
      pk = get product id 
      cart, create = if cart exist so get else create
-     cart_item = remove cart item if exist while quantity > 1 and increase product stock else remove from cart
+     cart_item = remove cart item if exist while quantity > 1 else remove from cart
     """
     cart, created = Cart.objects.get_or_create(user=request.user)
     product = get_object_or_404(Product, id=pk)

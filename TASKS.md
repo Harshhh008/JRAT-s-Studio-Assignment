@@ -76,8 +76,10 @@
 
 ## Order Functionality
 
-- [] model : order(every time generated new if order placed (foreign key)) and order item(store all items from the cart)
-- [] payment integration
+- [x] model : order(every time generated new if order placed (foreign key)), order item(store all items from the cart), payment
+- [x] payment integration (paypal)
+
+  flow : cart_items -> checkout -> create_order(storedata) -> if payment success -> cp all cart_item to order_item -> redirect payment complete page
 
 
 ## pagination

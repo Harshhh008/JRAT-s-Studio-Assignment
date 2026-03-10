@@ -1,0 +1,79 @@
+<h2>Checkout</h2>
+<p>Order ID: {{order_id}}</p>
+<p>Total Amount : {{total_amount}}</p>
+<div id="paypal-button-container"></div>
+<script src="https://www.paypal.com/sdk/js?client-id=AWxsUivB50-rtRjh7QYDxT_3assV_l-Qw92qgAAdXV1VBHDOgCv9Pve1XaIqSxMGf8ss3F4zPZsedJmc&currency=USD"></script>
+<script>
+const amount = "{{ total_amount }}";
+
+//document : https://docs.djangoproject.com/en/1.8/ref/csrf/
+function getCookie(name) {
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+
+            const cookie = cookies[i].trim();  // FIXED HERE
+
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+paypal.Buttons({
+
+    createOrder: function (data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: amount
+                }
+            }]
+        });
+    },
+
+    onApprove: function (data, actions) {
+        return actions.order.capture().then(function (details) {
+             console.log(details)
+            alert( "Transaction completed by " + details.payer.name.given_name + "!");
+            sendData()
+            // create new function to send data in backend
+            function sendData(){
+              fetch("{% url 'payments' %}", {
+                method: "POST",
+                headers: {
+                  "Content-type":   "application/json",
+                  "X-CSRFToken": csrftoken,  // generate csrf token 
+                },
+                body: JSON.stringify({
+                  orderID : "{{order_id}}",
+                  transID : details.id,
+                  payment_method : 'Paypal',
+                  status: details.status
+                })
+              })
+              .then(response => response.json())
+              .then(data => {
+              //console.log(data)
+              window.location.href = "{% url 'order_complete' %}" + "?order_number=" + data.orderID+'&payment_id='+data.transID
+              }
+              )
+
+            }
+        });
+    }
+
+}).render('#paypal-button-container');
+</script>
+
+<p><a href="{% url 'cart_view' %}">Back to cart</a></p>
