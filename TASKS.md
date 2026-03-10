@@ -74,11 +74,13 @@
 - [x] view cart functionality
 - [x] add to cart product functionality
 - [x] delete product from cart functionality
+- [] session based cart # bug : item total and total not working
 
 ## Order Functionality
 
 - [x] model : order(every time generated new if order placed (foreign key)), order item(store all items from the cart), payment
 - [x] payment integration (paypal)
+- [x] send mail purchase success
 
   flow : cart_items -> checkout -> create_order(storedata) -> if payment success -> cp all cart_item to order_item -> redirect payment complete page
 

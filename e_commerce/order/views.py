@@ -4,8 +4,10 @@ from .models import Order, OrderItem, Payment
 import json
 from django.http import JsonResponse
 from account.models import UserAddress
-from utils.email import purchase_email
+from utils.email import purchase_success_email
+from django.contrib.auth.decorators import login_required
 
+login_required(login_url='login')
 def create_order_from_cart(request):
   cart = Cart.objects.get(user=request.user)
   address = UserAddress.objects.filter(user=request.user).first().full_address
@@ -18,10 +20,12 @@ def create_order_from_cart(request):
   )
   return redirect('checkout_order', order_id=order.order_id)
 
+login_required(login_url='login')
 def checkout_order(request, order_id):
   order = Order.objects.get(order_id=order_id)
   return render(request, 'order/checkout.html', {'order_id': order_id, 'total_amount': order.total_amount})
   
+login_required(login_url='login')
 def payments(request):
   body = json.loads(request.body)
   order = Order.objects.get(order_id=body['orderID'])
@@ -71,6 +75,7 @@ def payments(request):
 
   return JsonResponse(data)
 
+login_required(login_url='login')
 def order_complete(request):
   order_id = request.GET.get('order_number')
   payment_id = request.GET.get('payment_id')
@@ -81,7 +86,7 @@ def order_complete(request):
     order_items = OrderItem.objects.select_related('product').filter(order=order)
 
     #send email
-    purchase_email(request.user.email)
+    purchase_success_email(request.user.email)
   except Exception as e:
     print(str(e))
   return render(request, 'order/order-complete.html', {'order_items': order_items,'order_id': order_id, 'payment_id': payment_id})

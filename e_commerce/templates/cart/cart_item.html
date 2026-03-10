@@ -4,7 +4,7 @@
   <strong>Description </strong>: {{cart_item.product.description}}<br>
   <strong>Price </strong>: {{cart_item.product.price}}<br>
   <strong>Quantity </strong>:{{cart_item.quantity}}<br>
-  <strong>Item Total </strong>:{{cart_item.item_total}}<br>
+  <strong>Item Total </strong>:{{cart_item.item_total|floatformat:2}}<br>
   {% if cart_item.product.stock > 0%}<a href="{% url 'add_to_cart' cart_item.product.id %}">Increase Quantity</a> | {% endif %}
   <a href="{% url 'remove_from_cart' cart_item.product.id %}">Decrease Quantity </a> 
     {% if not foorloop.last %}
