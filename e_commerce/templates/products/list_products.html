@@ -1,20 +1,35 @@
 {% extends "base.html" %}
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/product/list_product.css' %}">
+{% endblock style %}
 {% block content %}
-<h1>Product List</h1>
-{% if 'category' in request.path %}<a href="{% url 'category_update' category_id %}">Update This Category</a> |
-<a href="{% url 'category_delete' category_id %}">Delete This Category</a> |{% endif %}
-<a href="{% url 'create_product' %}">Add New Product</a><br></br>
-  {% for product in products %}
-  <img src="{{product.product_image.all.0.image.url }}" alt="{{product.name}}"><br>
-  <strong>Product Name</strong>: {{product.product_name}}<br>
-  <strong>Category Name</strong>: {{product.category.category_name}}<br>
-  <strong>Description </strong>: {{product.description}}<br>
-  <strong>Available Stock</strong>:{% if product.stock > 0 %}{{product.stock}}{% else %}Out Of Stock {% endif %}<br>
-  <strong>Price</strong>:{{product.price}}<br>
-  <a href="{% url 'get_product' product.id %}">View Product Detail</a> 
-  {% if product.stock > 0 %} | <a href="{% url 'add_to_cart' product.id %}">Add to cart</a> {% endif %}
-  {% if not forloop.last %}
-  <hr>
-  {% endif %}
-  {% endfor %}
+<div class="product-main">
+  <div class="head">
+    <div class="left">
+      <h1>Product List {% if category_id %} - {{category_name}}{% endif %}</h1>
+    </div>
+    <div class="right">
+      {% if 'category' in request.path %}<button><a href="{% url 'category_update' category_id %}">Update This Category</a> </button>
+      <button><a href="{% url 'category_delete' category_id %}">Delete This Category</a> </button>{% endif %}
+      <button><a href="{% url 'create_product' %}">Add New Product</a></button>
+    </div>
+  </div>
+    <div class="products">
+      {% for product in products %}
+    <div class="product_card">
+      <img src="{{product.product_image.all.0.image.url }}" alt="{{product.name}}"><br>
+      <strong>Product Name</strong>: {{product.product_name}}<br>
+      <strong>Category Name</strong>: {{product.category.category_name}}<br>
+      <strong>Description </strong>: {{product.description}}<br>
+      <strong>Available Stock</strong>:{% if product.stock > 0 %}{{product.stock}}{% else %}Out Of Stock {% endif %}<br>
+      <strong>Price</strong>:{{product.price}}<br>
+      <a href="{% url 'get_product' product.id %}">View Product Detail</a> 
+      {% if product.stock > 0 %} | <a href="{% url 'add_to_cart' product.id %}">Add to cart</a> {% endif %}
+      {% if not forloop.last %}
+      {% endif %}
+    </div>
+      {% endfor %}
+    </div>
+  </div>
 {% endblock content %}

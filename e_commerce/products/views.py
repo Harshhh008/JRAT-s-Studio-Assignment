@@ -71,19 +71,21 @@ def remove_images(request, p_pk=None, pk=None):
     return redirect('get_product', p_pk)
 
 def list_product(request, pk=None):
+    category_name = None
     if pk:
         products = (
             Product.objects.select_related("category")
             .prefetch_related("product_image")
             .filter(category__id=pk)
         )
+        category_name = Category.objects.get(id=pk)
     else:
         products = (
             Product.objects.select_related("category")
             .prefetch_related("product_image")
             .all()
         )
-    return render(request, "products/list_products.html", {"products": products, "category_id": pk if pk else None})
+    return render(request, "products/list_products.html", {"products": products, "category_id": pk if pk else None, "category_name": category_name})
 
 
 def get_product(request, pk):

@@ -1,27 +1,20 @@
-<style>
-.nav {
-  display: flex;
-  justify-content : space-between;
-}
-.cat{
-  display: flex; 
-  gap: 0 20px;
-}
-</style>
-
 <div class="nav">
-  <div class="cat">
+  <div>
+  <h1>JRat's</h1>
+  </div>
+  <div class="right">
+      <form action="{% url 'search_product' %}">
+        <input type="text" name="q" id="" placeholder="Search Product">
+        <input type="submit" value="Go">
+      </form>
+    <a href="{% url 'cart_view' %}">View in Cart</a>
+    <a href="{% url 'profile' %}">profile</a>
+    <a href="{% url 'logout' %}">Logout</a>
+  </div>
+</div>
+<div class="cat">
   <a href="{% url 'list_product' %}">All</a>
   {% for category in categories %}
    <a href="{% url 'list_by_category' category.id %}">{{category.category_name}}</a>
   {% endfor %}
-  </div>
-  <div>
-    <form action="{% url 'search_product' %}">
-      <input type="text" name="q" id="">
-    </form>
-  <a href="{% url 'cart_view' %}">View in Cart</a>
-  <a href="{% url 'profile' %}">profile</a>
-  <a href="{% url 'logout' %}">Logout</a>
-  </div>
 </div>
