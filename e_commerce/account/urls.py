@@ -9,4 +9,6 @@ urlpatterns = [
     path('edit-profile/<uuid:pk>/', views.edit_profile, name="edit_profile"),
     path('new/address/', views.add_address, name="add_address"),
     path('edit/address/<uuid:pk>/', views.edit_address, name="edit_address"),
+    path('password-reset/', views.reset_password_view, name="reset_password"),
+    path('password-reset/confirm/<str:user_id>/<str:token>/', views.reset_password_confirm_view, name="forgot_password_confirm"),
 ]

@@ -46,3 +46,12 @@ class UserAddressForm(forms.ModelForm):
         fields = [
             'house_num', 'building_name', 'area', 'city', 'state', 'pincode'
         ]
+
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'autofocus': True}))
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("user not found with this email.")
+        return email

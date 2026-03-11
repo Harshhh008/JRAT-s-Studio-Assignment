@@ -6,7 +6,14 @@ from django.contrib.auth import get_user_model
 from .models import UserAddress
 from order.models import Order
 
-from .forms import UserCreationForm, AuthenticationForm, UserProfileForm, UserAddressForm
+from .forms import UserCreationForm, AuthenticationForm, UserProfileForm, UserAddressForm, ForgotPasswordForm
+from utils.email import send_reset_password_email
+
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.urls import reverse
+from django.contrib.auth.forms import SetPasswordForm
 
 User = get_user_model()
 
@@ -55,10 +62,8 @@ def user_login(request):
         try:
           login(request ,user)
           if next_url:
-            print("next working)")
             return redirect(next_url)
           else:
-            print("working")
             return redirect('list_product')
         except Exception as e:
           print(str(e))
@@ -122,3 +127,44 @@ def edit_address(request, pk):
       return redirect('profile')
   address_form = UserAddressForm(instance=address)
   return render(request, 'account/address_form.html', {'address_form': address_form})
+
+
+def reset_password_view(request):
+  if request.method == "POST":
+    form = ForgotPasswordForm(request.POST)
+    if form.is_valid():
+      email = form.cleaned_data.get('email')
+      user = User.objects.filter(email=email).first()
+      if user:
+        # encode id
+        user_id = urlsafe_base64_encode(force_bytes(user.id))
+        token = default_token_generator.make_token(user)
+
+        reset_password_link = reverse(
+            "forgot_password_confirm", kwargs={"user_id": user_id, "token": token} 
+        )
+        reset_password_email_link = f"{request.build_absolute_uri(reset_password_link)}"
+        send_reset_password_email(email, reset_password_email_link)
+        messages.success(request, f'reset link sended your email {email}')
+
+  form = ForgotPasswordForm()
+  return render(request, 'account/reset_password.html', {'form': form})
+
+def reset_password_confirm_view(request, user_id, token):
+  user_id = force_str(urlsafe_base64_decode(user_id))
+  user = User.objects.get(id=user_id)
+  token = default_token_generator.check_token(user, token)
+  if not token:
+    messages.error(request, "This link expired or invalid.")
+  else:
+    if request.method == "POST":
+      form = SetPasswordForm(user, request.POST)
+      if form.is_valid():
+        form.save()
+        logout(request)
+        messages.success(request, "Your password changed successfully.")
+        return redirect('login')
+      else:
+        print(form.errors)
+    form = SetPasswordForm(user)
+  return render(request, 'account/reset_password_confirm.html', {'form': form})
