@@ -23,6 +23,8 @@ class ProductImageForm(forms.ModelForm):
   
   def clean_image(self):
     image = self.cleaned_data.get('image')
+    if not image:
+      raise forms.ValidationError("Image is required")
     if self.product and ProductImage.objects.filter(image=image.name).exists():
       raise forms.ValidationError('Image already exist.')
     return image

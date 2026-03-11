@@ -1,47 +1,132 @@
 {% extends "base.html" %}
 
 {% block style %}
-  /* Styling for product image */
-  .product-image {
+  .product-slider {
     position: relative;
-    display: inline-block;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease;
-  }
-
-  .product-img {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+    max-width: 850px;
+    overflow: hidden;
+    margin: 10px auto;
+    border-radius: 12px;
+    background: #f8f8f8;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   }
 
-  .product-image:hover .product-img {
-    transform: scale(1.1);
+  .product-images {
+    position: relative;
+    width: 100%;
+    height: 340px;
   }
 
+  .product-image {
+    display: none;           /* hidden by default */
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-image.active {
+    display: flex;           /* only active shown */
+    justify-content: center;
+    align-items: center;
+  }
+
+  .product-image img.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #f8f8f8;
+  }
+
+  /* Dot indicators */
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 0 6px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .dot.active {
+    background: #2196F3;
+    display: block; /* override the .active display:flex from parent */
+  }
+
+  /* Image counter badge */
+  .slide-counter {
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    background: rgba(0,0,0,0.45);
+    color: #fff;
+    font-size: 13px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    z-index: 12;
+    pointer-events: none;
+  }
+
+  /* Navigation buttons */
+  .prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255,255,255,0.85);
+    color: #333;
+    padding: 10px 13px;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 10;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .prev { left: 12px; }
+  .next { right: 12px; }
+
+  .prev:hover, .next:hover {
+    background-color: #fff;
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  /* Delete image button */
   .delete-image {
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: rgba(255, 0, 0, 0.7);
+    background-color: rgba(220, 53, 69, 0.85);
     color: white;
-    padding: 6px 12px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     font-weight: bold;
     text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    transition: background-color 0.2s, transform 0.2s;
+    z-index: 11;
   }
 
   .delete-image:hover {
-    background-color: red;
-    transform: scale(1.1);
+    background-color: #dc3545;
+    transform: scale(1.15);
   }
 
-  /* Styling for product details */
+  /* Product details card */
   .product-details {
     background-color: #ffffff;
     border-radius: 12px;
@@ -54,148 +139,112 @@
   }
 
   .product-details h2 {
-    color: #333;
-    font-size: 32px;
+    color: #222;
+    font-size: 28px;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
   }
 
   .product-details p {
-    font-size: 18px;
+    font-size: 16px;
     color: #555;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
 
   .product-details p strong {
     color: #333;
   }
 
-  /* Styling for action buttons */
+  /* Action buttons */
   .product-actions {
     margin-top: 25px;
     display: flex;
-    gap: 15px;
+    gap: 12px;
     flex-wrap: wrap;
   }
 
   .product-actions a {
     text-decoration: none;
-    padding: 12px 25px;
-    border-radius: 5px;
+    padding: 11px 22px;
+    border-radius: 6px;
     font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-size: 15px;
+    transition: background-color 0.2s, transform 0.2s;
     display: inline-block;
     text-align: center;
-    min-width: 160px;
-  }
-
-  .action-btn {
+    min-width: 150px;
     color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.10);
   }
 
-  .add-image {
-    background-color: #4CAF50;
-  }
+  .add-image    { background-color: #4CAF50; }
+  .add-image:hover { background-color: #388E3C; transform: translateY(-2px); }
 
-  .add-image:hover {
-    background-color: #388E3C;
-    transform: translateY(-2px);
-  }
+  .edit-product { background-color: #ff9800; }
+  .edit-product:hover { background-color: #f57c00; transform: translateY(-2px); }
 
-  .edit-product {
-    background-color: #ff9800;
-  }
+  .remove-product { background-color: #f44336; }
+  .remove-product:hover { background-color: #d32f2f; transform: translateY(-2px); }
 
-  .edit-product:hover {
-    background-color: #f57c00;
-    transform: translateY(-2px);
-  }
+  .add-to-cart  { background-color: #2196F3; }
+  .add-to-cart:hover { background-color: #1565C0; transform: translateY(-2px); }
 
-  .remove-product {
-    background-color: #f44336;
-  }
-
-  .remove-product:hover {
-    background-color: #d32f2f;
-    transform: translateY(-2px);
-  }
-
-  .add-to-cart {
-    background-color: #2196F3;
-  }
-
-  .add-to-cart:hover {
-    background-color: #1976d2;
-    transform: translateY(-2px);
-  }
-
-  /* Responsive design for smaller screens */
   @media screen and (max-width: 768px) {
-    .product-details {
-      padding: 20px;
-    }
-
-    .product-img {
-      height: 180px;
-    }
-
-    .product-actions a {
-      font-size: 14px;
-      padding: 10px 20px;
-      min-width: 140px;
-    }
-
-    .delete-image {
-      top: 5px;
-      right: 5px;
-      padding: 4px 8px;
-    }
+    .product-images { height: 240px; }
+    .product-actions a { font-size: 13px; padding: 9px 16px; min-width: 130px; }
   }
 
   @media screen and (max-width: 600px) {
-    .product-details {
-      padding: 15px;
-    }
-
-    .product-img {
-      height: 150px;
-    }
-
-    .product-actions a {
-      font-size: 14px;
-      padding: 8px 15px;
-    }
-
-    .delete-image {
-      top: 5px;
-      right: 5px;
-      padding: 4px 8px;
-    }
+    .product-images { height: 200px; }
+    .product-actions a { font-size: 13px; padding: 8px 12px; }
   }
 {% endblock style %}
 
 {% block content %}
-  {% for images in product.product_image.all %}
-    <div class="product-image">
-      <img src="{{ images.image.url }}" alt="{{ product.product_name }}" class="product-img">
-      <a href="{% url 'remove_images' product.id images.id %}" class="delete-image">X</a>
+  <div class="product-slider">
+    <div class="product-images">
+      {% for image in product.product_image.all %}
+        <div class="product-image {% if forloop.first %}active{% endif %}">
+          <img src="{{ image.image.url }}" alt="{{ product.product_name }}" class="product-img">
+          {% if request.user.is_authenticated and request.user.is_staff or request.user.is_superuser %}
+            <a href="{% url 'remove_images' product.id image.id %}" class="delete-image" title="Delete image">✕</a>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <!-- Image counter e.g. "1 / 3" -->
+      <span class="slide-counter" id="slideCounter"></span>
     </div>
-  {% endfor %}
+
+    <!-- Dot indicators -->
+    <div class="slider-dots" id="sliderDots"></div>
+
+    <button class="prev" onclick="moveSlide(-1)" aria-label="Previous">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="next" onclick="moveSlide(1)" aria-label="Next">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
 
   <div class="product-details">
     <h2>{{ product.product_name }}</h2>
-    <p><strong>Category Name:</strong> {{ product.category.category_name }}</p>
+    <p><strong>Category:</strong> {{ product.category.category_name }}</p>
     <p><strong>Description:</strong> {{ product.description }}</p>
-    <p><strong>Available Stock:</strong> {% if product.stock > 0 %}{{ product.stock }}{% else %}Out of stock{% endif %}</p>
+    <p><strong>Available Stock:</strong>
+      {% if product.stock > 0 %}
+        {{ product.stock }}
+      {% else %}
+        <span style="color:#f44336;">Out of stock</span>
+      {% endif %}
+    </p>
     <p><strong>Price:</strong> ₹{{ product.price }}</p>
 
     <div class="product-actions">
       {% if request.user.is_authenticated and request.user.is_staff or request.user.is_superuser %}
-      <a href="{% url 'add_images' product.id %}" class="action-btn add-image">Add Product Image</a>
-      <a href="{% url 'edit_product' product.id %}" class="action-btn edit-product">Edit Product</a>
-      <a href="{% url 'remove_product' product.id %}" class="action-btn remove-product">Remove Product</a>
+        <a href="{% url 'add_images' product.id %}"    class="action-btn add-image">Add Product Image</a>
+        <a href="{% url 'edit_product' product.id %}"  class="action-btn edit-product">Edit Product</a>
+        <a href="{% url 'remove_product' product.id %}" class="action-btn remove-product">Remove Product</a>
       {% endif %}
       {% if product.stock > 0 %}
         <a href="{% url 'add_to_cart' product.id %}" class="action-btn add-to-cart">Add To Cart</a>
@@ -203,3 +252,44 @@
     </div>
   </div>
 {% endblock content %}
+
+{% block script %}
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.product-image');
+    const totalSlides = slides.length;
+    const dotsContainer = document.getElementById('sliderDots');
+    const counter = document.getElementById('slideCounter');
+
+    // Build dots
+    slides.forEach((_, i) => {
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(i));
+      dotsContainer.appendChild(dot);
+    });
+
+    function updateUI() {
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+      if (totalSlides > 1) {
+        counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+      }
+    }
+
+    function goToSlide(index) {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (index + totalSlides) % totalSlides;
+      slides[currentSlide].classList.add('active');
+      updateUI();
+    }
+
+    function moveSlide(direction) {
+      goToSlide(currentSlide + direction);
+    }
+
+    // Init counter
+    updateUI();
+  </script>
+{% endblock script %}
