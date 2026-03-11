@@ -93,4 +93,4 @@
 ## analytics (total sale, top products)
 
 - [x] total sale
-- [] top products
+- [x] top products
