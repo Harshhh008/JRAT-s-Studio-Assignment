@@ -13,7 +13,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
-from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.forms import SetPasswordForm, PasswordChangeForm
 
 User = get_user_model()
 
@@ -169,3 +169,20 @@ def reset_password_confirm_view(request, user_id, token):
         print(form.errors)
     form = SetPasswordForm(user)
     return render(request, 'account/reset_password_confirm.html', {'form': form})
+
+@login_required(login_url='login')
+def change_password(request):
+  if request.method == "POST":
+    form = PasswordChangeForm(user=request.user, data=request.POST)
+    if form.is_valid():
+      try:
+        form.save()
+        logout(request)
+        messages.success(request, 'password changed successfully now you can login with your new password!')
+        return redirect('login')
+      except Exception as e:
+        print(str(e))
+    else:
+      print(form.errors)
+  form = PasswordChangeForm(user=request.user)
+  return render(request, 'account/password_change.html', {'form': form})

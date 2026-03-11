@@ -296,9 +296,14 @@
         <div class="card-head-icon icon-green"><i class="fas fa-user"></i></div>
         <h2>My Profile</h2>
       </div>
-      <a href="{% url 'edit_profile' user.id %}" class="btn btn-blue">
-        <i class="fas fa-pen"></i> Edit Profile
-      </a>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="{% url 'change_password' %}" class="btn btn-green">
+          <i class="fas fa-lock"></i> Change Password
+        </a>
+        <a href="{% url 'edit_profile' user.id %}" class="btn btn-blue">
+          <i class="fas fa-pen"></i> Edit Profile
+        </a>
+      </div>
     </div>
     <div class="card-body">
       <div class="info-grid">
