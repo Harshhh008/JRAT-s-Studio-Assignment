@@ -428,7 +428,7 @@
                 {{ order.shipping_address }}
               </div>
             </div>
-            {% if order.payment.status|lower == 'paid' %}
+            {% if order.payment.status|lower == 'completed' %}
               <span class="pay-badge pay-paid"><i class="fas fa-check-circle"></i> Paid</span>
             {% else %}
               <span class="pay-badge pay-unpaid"><i class="fas fa-times-circle"></i> Unpaid</span>

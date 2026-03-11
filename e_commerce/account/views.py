@@ -84,7 +84,7 @@ def profile(request):
   # addresses
   user_addresses = UserAddress.objects.filter(user=request.user)
   # user all orders
-  orders = Order.objects.prefetch_related('order_item','order_item__product', 'payment').filter(user=request.user)
+  orders = Order.objects.prefetch_related('order_item','order_item__product', 'payment').filter(user=request.user).order_by('-created_at')
 
   return render(request, 'account/profile.html', {'user': request.user, 'user_addresses': user_addresses, 'orders': orders})
 
