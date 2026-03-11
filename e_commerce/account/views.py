@@ -80,6 +80,7 @@ def user_logout(request):
   except Exception as e:
     print(str(e))
   else:
+    messages.success(request, "you have logged out successfully.")
     return redirect('login')
 
 @login_required(login_url='login')
