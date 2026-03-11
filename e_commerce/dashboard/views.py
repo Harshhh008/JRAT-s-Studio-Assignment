@@ -3,6 +3,7 @@ from products.models import Product
 from order.models import OrderItem
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -20,13 +21,16 @@ def dashboard_categories(request):
   return render(request, 'dashboard/data.html')
 
 def dashboard_products(request):
-  products = Product.objects.select_related('category').all()
+  q = request.GET.get('q', '')
+  products = Product.objects.select_related('category').filter(product_name__icontains=q).order_by('-created_at')
   return render(request, 'dashboard/data.html', {'products': products})
 
 def dashboard_users(request):
-  users = User.objects.prefetch_related('address').all()
+  q = request.GET.get('q', '')
+  users = User.objects.prefetch_related('address').filter(Q(username__icontains=q) | Q(email__icontains=q)).order_by('-updated_at')
   return render(request, 'dashboard/data.html', {'users': users})
 
 def dashboard_ordered_items(request):
-  order_items = OrderItem.objects.select_related('order', 'product', 'order__user', 'product__category', 'order__payment').prefetch_related('order__user__address').all()
+  q =request.GET.get('q', '')
+  order_items = OrderItem.objects.select_related('order', 'product', 'order__user', 'product__category', 'order__payment').prefetch_related('order__user__address').filter(Q(order__order_id__icontains=q) | Q(order__user__email=q))
   return render(request, 'dashboard/data.html', {'order_items': order_items})

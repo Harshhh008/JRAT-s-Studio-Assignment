@@ -85,14 +85,14 @@ def list_product(request, pk=None):
         products = (
             Product.objects.select_related("category")
             .prefetch_related("product_image")
-            .filter(category__id=pk)
+            .filter(category__id=pk).order_by('-created_at')
         )
         category_name = Category.objects.get(id=pk)
     else:
         products = (
             Product.objects.select_related("category")
             .prefetch_related("product_image")
-            .all()
+            .order_by('-created_at')
         )
     return render(request, "products/list_products.html", {"products": products, "category_id": pk if pk else None, "category_name": category_name})
 

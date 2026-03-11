@@ -26,10 +26,7 @@
     font-family: 'DM Sans', sans-serif;
   }
 
-  /* ── Header ── */
-  .dash-header {
-    margin-bottom: 36px;
-  }
+  .dash-header { margin-bottom: 36px; }
 
   .dash-header p {
     font-size: 13px;
@@ -137,14 +134,78 @@
     letter-spacing: 0.8px;
   }
 
-  /* ── Quick Actions ── */
+  /* ── Actions row ── */
+  .actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
   .dash-section-title {
     font-family: 'Playfair Display', serif;
     font-size: 22px;
     color: var(--text);
-    margin-bottom: 16px;
+    margin: 0;
+    white-space: nowrap;
   }
 
+  /* ── Search bar ── */
+  .dash-search {
+    display: flex;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    flex: 1;
+    max-width: 360px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .dash-search:focus-within {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.10);
+  }
+
+  .dash-search i {
+    padding: 0 13px;
+    color: var(--muted);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .dash-search input {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: transparent;
+  }
+
+  .dash-search input::placeholder { color: var(--muted); }
+
+  .dash-search button {
+    padding: 10px 18px;
+    background: var(--green);
+    border: none;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .dash-search button:hover { background: var(--green-light); }
+
+  /* ── Quick action buttons ── */
   .dash-actions {
     display: flex;
     gap: 12px;
@@ -167,14 +228,24 @@
   }
 
   .dash-action-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
-
   .dash-action-btn.green  { background: var(--green); }
   .dash-action-btn.blue   { background: var(--blue); }
   .dash-action-btn.purple { background: var(--purple); }
 
+  /* ── Search result count ── */
+  .result-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .result-note strong { color: var(--text); }
+
   @media (max-width: 600px) {
     .dash-header h1 { font-size: 28px; }
     .card-count { font-size: 36px; }
+    .dash-search { max-width: 100%; }
+    .actions-row { flex-direction: column; align-items: stretch; }
   }
 </style>
 
@@ -188,7 +259,6 @@
 
   <!-- Stat Cards -->
   <div class="dash-cards">
-
     <a href="{% url 'dashboard_categories' %}" class="dash-card green">
       <div class="card-top">
         <div class="card-icon"><i class="fas fa-tag"></i></div>
@@ -221,6 +291,7 @@
         <div class="card-label">Users</div>
       </div>
     </a>
+
     <a href="{% url 'dashboard_ordered_items' %}" class="dash-card orange">
       <div class="card-top">
         <div class="card-icon"><i class="fas fa-bag-shopping"></i></div>
@@ -231,26 +302,69 @@
         <div class="card-label">Ordered Items</div>
       </div>
     </a>
+  </div>
+
+  <!-- Actions row: title + search + button -->
+  <div class="actions-row">
+    <h2 class="dash-section-title">Quick Actions</h2>
+
+    <!-- Search — only shown on products, users, ordered pages -->
+    {% if 'main/products' in request.path %}
+      <form class="dash-search" method="get" action="{% url 'dashboard_products' %}">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" placeholder="Search products…"
+               value="{{ request.GET.q }}" autocomplete="off">
+        <button type="submit">Search</button>
+      </form>
+    {% elif 'main/users' in request.path %}
+      <form class="dash-search" method="get" action="{% url 'dashboard_users' %}">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" placeholder="Search users…"
+               value="{{ request.GET.q }}" autocomplete="off">
+        <button type="submit">Search</button>
+      </form>
+    {% elif 'main/ordered' in request.path %}
+      <form class="dash-search" method="get" action="{% url 'dashboard_ordered_items' %}">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" placeholder="Search by order ID or email…"
+               value="{{ request.GET.q }}" autocomplete="off">
+        <button type="submit">Search</button>
+      </form>
+    {% elif 'main/categories' in request.path %}
+      <form class="dash-search" method="get" action="{% url 'dashboard_categories' %}">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" placeholder="Search categories…"
+               value="{{ request.GET.q }}" autocomplete="off">
+        <button type="submit">Search</button>
+      </form>
+    {% endif %}
 
   </div>
 
-  <!-- Quick Actions -->
-  <h2 class="dash-section-title">Quick Actions</h2>
-
-  <div class="dash-actions">
-  {% if 'main/product' in request.path%}
-    <a href="{% url 'create_product' %}" class="dash-action-btn green">
-      <i class="fas fa-plus"></i> Add Product
-    </a>
-  {% elif 'main/categories' in request.path%}
-    <a href="{% url 'create_category' %}" class="dash-action-btn blue">
-      <i class="fas fa-folder-plus"></i> Add Category
-    </a>
-  {% elif 'main/users' in request.path%}
-    <a href="{% url 'dashboard_users' %}" class="dash-action-btn purple">
-      <i class="fas fa-user-plus"></i> Manage Users
-    </a>
+  <!-- Search result note -->
+  {% if request.GET.q %}
+    <p class="result-note">
+      Showing results for <strong>"{{ request.GET.q }}"</strong>
+      — <a href="{{ request.path }}" style="color:var(--green);font-weight:600;">Clear</a>
+    </p>
   {% endif %}
+
+  <!-- Quick action buttons -->
+  <div class="dash-actions">
+    {% if 'main/products' in request.path %}
+      <a href="{% url 'create_product' %}" class="dash-action-btn green">
+        <i class="fas fa-plus"></i> Add Product
+      </a>
+    {% elif 'main/categories' in request.path %}
+      <a href="{% url 'create_category' %}" class="dash-action-btn blue">
+        <i class="fas fa-folder-plus"></i> Add Category
+      </a>
+    {% elif 'main/users' in request.path %}
+      <a href="{% url 'dashboard_users' %}" class="dash-action-btn purple">
+        <i class="fas fa-user-plus"></i> Manage Users
+      </a>
+    {% endif %}
   </div>
+
 </div>
 {% endblock content %}
