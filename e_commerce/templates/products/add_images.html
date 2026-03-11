@@ -1,5 +1,451 @@
-<form action="" method='POST' enctype="multipart/form-data">
-  {% csrf_token %}
-  {{product_image_form.as_p}}
-  <input type="submit" value="Add Image">
-</form>
+{% extends "base.html" %}
+
+{% block style %}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f4f1ec;
+    --card-bg: #ffffff;
+    --green: #2d6a4f;
+    --green-light: #40916c;
+    --red: #e63946;
+    --text: #1a1a2e;
+    --muted: #7a7a8c;
+    --border: #e8e4dc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: 'DM Sans', sans-serif; }
+
+  .wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 22px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 36px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header ── */
+  .card-head {
+    padding: 26px 30px 22px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .head-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(45,106,79,0.12);
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .card-head h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--text);
+  }
+
+  .card-head p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* ── Drop zone ── */
+  .drop-zone {
+    margin: 28px 30px 0;
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    background: #faf9f6;
+  }
+
+  .drop-zone:hover,
+  .drop-zone.dragover {
+    border-color: var(--green);
+    background: rgba(45,106,79,0.04);
+  }
+
+  .drop-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .drop-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(45,106,79,0.10);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    font-size: 22px;
+    color: var(--green);
+    transition: transform 0.2s;
+  }
+
+  .drop-zone:hover .drop-icon { transform: scale(1.08); }
+
+  .drop-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .drop-sub {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .drop-sub span {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  /* File type badges */
+  .file-types {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .file-type {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: rgba(45,106,79,0.08);
+    color: var(--green);
+    border: 1px solid rgba(45,106,79,0.15);
+  }
+
+  /* Preview */
+  .preview-wrap {
+    margin: 16px 30px 0;
+    display: none;
+    align-items: center;
+    gap: 14px;
+    background: #faf9f6;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+  }
+
+  .preview-wrap.show { display: flex; }
+
+  .preview-thumb {
+    width: 54px;
+    height: 54px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .preview-info { flex: 1; overflow: hidden; }
+
+  .preview-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .preview-size {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .preview-remove {
+    background: rgba(230,57,70,0.10);
+    color: var(--red);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .preview-remove:hover { background: var(--red); color: white; }
+
+  /* Extra form fields (Django as_p) */
+  .form-fields {
+    padding: 20px 30px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-fields p { display: flex; flex-direction: column; gap: 5px; }
+
+  .form-fields label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* Hide the default file input Django renders — we use our drop zone */
+  .form-fields p:has(input[type="file"]) { display: none; }
+
+  .form-fields input[type="text"],
+  .form-fields input[type="number"],
+  .form-fields select,
+  .form-fields textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: #faf9f6;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-fields input:focus,
+  .form-fields select:focus,
+  .form-fields textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.10);
+    background: #fff;
+  }
+
+  .form-fields .errorlist {
+    list-style: none;
+  }
+
+  .form-fields .errorlist li {
+    font-size: 12px;
+    color: var(--red);
+    font-weight: 600;
+  }
+
+  /* ── Footer ── */
+  .card-footer {
+    padding: 24px 30px 28px;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    padding: 12px 26px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  }
+
+  .btn-submit {
+    background: var(--green);
+    color: white;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .btn-submit:hover { background: var(--green-light); transform: translateY(-2px); }
+
+  .btn-cancel {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+    box-shadow: none;
+  }
+
+  .btn-cancel:hover { background: var(--bg); color: var(--text); transform: translateY(-2px); }
+
+  @media (max-width: 480px) {
+    .card-head, .drop-zone, .preview-wrap, .form-fields, .card-footer {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+    .drop-zone { margin: 20px 18px 0; }
+    .preview-wrap { margin: 12px 18px 0; }
+    .card-footer { flex-direction: column-reverse; }
+    .btn { width: 100%; justify-content: center; }
+  }
+{% endblock style %}
+
+{% block content %}
+<div class="wrap">
+  <div class="card">
+
+    <!-- Header -->
+    <div class="card-head">
+      <div class="head-icon"><i class="fas fa-images"></i></div>
+      <div>
+        <h1>Add Product Image</h1>
+        <p>Upload an image for <strong>{{ product.product_name }}</strong></p>
+      </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" id="imageForm">
+      {% csrf_token %}
+
+      <!-- Custom drop zone -->
+      <div class="drop-zone" id="dropZone">
+        <input type="file" name="image" accept="image/*" id="fileInput">
+        <div class="drop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+        <div class="drop-title">Drop your image here</div>
+        <div class="drop-sub">or <span>browse files</span> to upload</div>
+        <div class="file-types">
+          <span class="file-type">JPG</span>
+          <span class="file-type">PNG</span>
+          <span class="file-type">WEBP</span>
+          <span class="file-type">GIF</span>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="preview-wrap" id="previewWrap">
+        <img src="" alt="preview" class="preview-thumb" id="previewThumb">
+        <div class="preview-info">
+          <div class="preview-name" id="previewName"></div>
+          <div class="preview-size" id="previewSize"></div>
+        </div>
+        <button type="button" class="preview-remove" id="removeFile" title="Remove">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Any extra Django form fields (non-file) -->
+      <div class="form-fields">
+        {{ product_image_form.as_p }}
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer">
+        <a href="{% url 'get_product' product.id %}" class="btn btn-cancel">
+          <i class="fas fa-xmark"></i> Cancel
+        </a>
+        <button type="submit" class="btn btn-submit">
+          <i class="fas fa-cloud-arrow-up"></i> Upload Image
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  const dropZone   = document.getElementById('dropZone');
+  const fileInput  = document.getElementById('fileInput');
+  const previewWrap= document.getElementById('previewWrap');
+  const previewThumb=document.getElementById('previewThumb');
+  const previewName= document.getElementById('previewName');
+  const previewSize= document.getElementById('previewSize');
+  const removeBtn  = document.getElementById('removeFile');
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  function showPreview(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      previewThumb.src = e.target.result;
+      previewName.textContent = file.name;
+      previewSize.textContent = formatBytes(file.size);
+      previewWrap.classList.add('show');
+      dropZone.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) showPreview(fileInput.files[0]);
+  });
+
+  // Drag and drop
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      // Transfer to actual input
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      fileInput.files = dt.files;
+      showPreview(file);
+    }
+  });
+
+  // Remove file
+  removeBtn.addEventListener('click', () => {
+    fileInput.value = '';
+    previewWrap.classList.remove('show');
+    dropZone.style.display = '';
+  });
+</script>
+{% endblock script %}

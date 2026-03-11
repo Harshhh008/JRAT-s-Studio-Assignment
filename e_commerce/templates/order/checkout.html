@@ -1,79 +1,308 @@
-<h2>Checkout</h2>
-<p>Order ID: {{order_id}}</p>
-<p>Total Amount : {{total_amount}}</p>
-<div id="paypal-button-container"></div>
+{% extends "base.html" %}
+
+{% block style %}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f4f1ec;
+    --card-bg: #ffffff;
+    --green: #2d6a4f;
+    --green-light: #40916c;
+    --accent: #f77f00;
+    --blue: #1a73e8;
+    --text: #1a1a2e;
+    --muted: #7a7a8c;
+    --border: #e8e4dc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .auth-page {
+    min-height: calc(100vh - 68px);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+  }
+
+  .auth-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, #c8c2b4 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: var(--card-bg);
+    border-radius: 22px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 36px rgba(0,0,0,0.09);
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header ── */
+  .card-head {
+    background: var(--green);
+    padding: 32px 36px 28px;
+    text-align: center;
+  }
+
+  .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: white;
+    margin-bottom: 8px;
+  }
+
+  .brand span {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-left: 2px;
+    vertical-align: super;
+  }
+
+  .card-head p { font-size: 13px; color: rgba(255,255,255,0.72); }
+
+  /* ── Body ── */
+  .card-body {
+    padding: 28px 36px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Order summary rows */
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #faf9f6;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .summary-row .row-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .summary-row .row-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .summary-row.total .row-label {
+    color: var(--green);
+    font-size: 13px;
+  }
+
+  .summary-row.total .row-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--green);
+  }
+
+  /* Divider */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* PayPal container */
+  .paypal-wrap {
+    padding: 0 36px 10px;
+  }
+
+  #paypal-button-container {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  /* ── Footer ── */
+  .card-footer {
+    padding: 20px 36px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .secure-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .secure-note i { color: var(--green); font-size: 12px; }
+
+  .back-link {
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .back-link a {
+    color: var(--green);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .back-link a:hover { text-decoration: underline; }
+
+  @media (max-width: 480px) {
+    .card-head  { padding: 26px 22px 22px; }
+    .card-body  { padding: 20px 22px 8px; }
+    .paypal-wrap{ padding: 0 22px 8px; }
+    .card-footer{ padding: 16px 22px 24px; }
+  }
+{% endblock style %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="card">
+
+    <!-- Header -->
+    <div class="card-head">
+      <div class="brand">JRat's<span></span></div>
+      <p>Complete your purchase securely</p>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="card-body">
+
+      <div class="summary-row">
+        <span class="row-label">Order ID</span>
+        <span class="row-value">#{{ order_id }}</span>
+      </div>
+
+      <div class="summary-row total">
+        <span class="row-label">Total Amount</span>
+        <span class="row-value">₹ {{ total_amount }}</span>
+      </div>
+
+      <div class="section-divider">Pay with</div>
+
+    </div>
+
+    <!-- PayPal Button -->
+    <div class="paypal-wrap">
+      <div id="paypal-button-container"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <div class="secure-note">
+        <i class="fas fa-lock"></i>
+        Payments are encrypted and secure
+      </div>
+      <div class="back-link">
+        <a href="{% url 'cart_view' %}">
+          <i class="fas fa-arrow-left"></i> Back to Cart
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
 <script src="https://www.paypal.com/sdk/js?client-id=AWxsUivB50-rtRjh7QYDxT_3assV_l-Qw92qgAAdXV1VBHDOgCv9Pve1XaIqSxMGf8ss3F4zPZsedJmc&currency=USD"></script>
 <script>
-const amount = "{{ total_amount }}";
+  const amount = "{{ total_amount }}";
 
-//document : https://docs.djangoproject.com/en/1.8/ref/csrf/
-function getCookie(name) {
+  function getCookie(name) {
     let cookieValue = null;
-
     if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-
-        for (let i = 0; i < cookies.length; i++) {
-
-            const cookie = cookies[i].trim();  // FIXED HERE
-
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(
-                    cookie.substring(name.length + 1)
-                );
-                break;
-            }
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
+      }
     }
-
     return cookieValue;
-}
-var csrftoken = getCookie('csrftoken');
+  }
 
-paypal.Buttons({
+  const csrftoken = getCookie('csrftoken');
+
+  paypal.Buttons({
 
     createOrder: function (data, actions) {
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: amount
-                }
-            }]
-        });
+      return actions.order.create({
+        purchase_units: [{ amount: { value: amount } }]
+      });
     },
 
     onApprove: function (data, actions) {
-        return actions.order.capture().then(function (details) {
-             console.log(details)
-            alert( "Transaction completed by " + details.payer.name.given_name + "!");
-            sendData()
-            // create new function to send data in backend
-            function sendData(){
-              fetch("{% url 'payments' %}", {
-                method: "POST",
-                headers: {
-                  "Content-type":   "application/json",
-                  "X-CSRFToken": csrftoken,  // generate csrf token 
-                },
-                body: JSON.stringify({
-                  orderID : "{{order_id}}",
-                  transID : details.id,
-                  payment_method : 'Paypal',
-                  status: details.status
-                })
-              })
-              .then(response => response.json())
-              .then(data => {
-              //console.log(data)
-              window.location.href = "{% url 'order_complete' %}" + "?order_number=" + data.orderID+'&payment_id='+data.transID
-              }
-              )
-
-            }
+      return actions.order.capture().then(function (details) {
+        fetch("{% url 'payments' %}", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            "X-CSRFToken": csrftoken,
+          },
+          body: JSON.stringify({
+            orderID: "{{ order_id }}",
+            transID: details.id,
+            payment_method: 'Paypal',
+            status: details.status
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          window.location.href = "{% url 'order_complete' %}"
+            + "?order_number=" + data.orderID
+            + "&payment_id=" + data.transID;
         });
+      });
+    },
+
+    onError: function (err) {
+      console.error('PayPal error:', err);
+      alert('Something went wrong with the payment. Please try again.');
     }
 
-}).render('#paypal-button-container');
+  }).render('#paypal-button-container');
 </script>
-
-<p><a href="{% url 'cart_view' %}">Back to cart</a></p>
+{% endblock script %}

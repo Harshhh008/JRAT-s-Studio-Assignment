@@ -1,39 +1,247 @@
-{% include "base.html" %}
+{% extends "base.html" %}
 {% block content %}
 <style>
-.dashboard-links {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 15px;
-  margin-top: 20px;
-  justify-content: center;
-}
-.dashboard-links a {
-  text-decoration: none;
-  background: #4CAF50;
-  color: white;
-  padding: 8px 15px;
-  border-radius: 5px;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-.dashboard-links a:hover {
-  background: #45a049;
-}
-.dashboard-links a .count {
-  background: white;
-  color: #4CAF50;
-  padding: 2px 8px;
-  border-radius: 12px;
-  margin-left: 5px;
-  font-weight: normal;
-}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f4f1ec;
+    --card-bg: #ffffff;
+    --green: #2d6a4f;
+    --green-light: #40916c;
+    --accent: #f77f00;
+    --blue: #1a73e8;
+    --purple: #7c3aed;
+    --red: #e63946;
+    --text: #1a1a2e;
+    --muted: #7a7a8c;
+    --border: #e8e4dc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  .dashboard-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Header ── */
+  .dash-header {
+    margin-bottom: 36px;
+  }
+
+  .dash-header p {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .dash-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: var(--text);
+    line-height: 1.15;
+  }
+
+  .dash-header h1 span { color: var(--green); }
+
+  /* ── Stat Cards ── */
+  .dash-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .dash-card {
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 28px 28px 24px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dash-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .dash-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.11);
+  }
+
+  .dash-card.green::before  { background: var(--green); }
+  .dash-card.blue::before   { background: var(--blue); }
+  .dash-card.purple::before { background: var(--purple); }
+  .dash-card.orange::before { background: var(--accent); }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .card-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .dash-card.green  .card-icon { background: rgba(45,106,79,0.12);  color: var(--green); }
+  .dash-card.blue   .card-icon { background: rgba(26,115,232,0.12); color: var(--blue); }
+  .dash-card.purple .card-icon { background: rgba(124,58,237,0.12); color: var(--purple); }
+  .dash-card.orange .card-icon { background: rgba(247,127,0,0.12);  color: var(--accent); }
+
+  .card-arrow {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    transition: transform 0.2s;
+  }
+
+  .dash-card:hover .card-arrow { transform: translateX(4px); }
+
+  .card-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .card-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* ── Quick Actions ── */
+  .dash-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .dash-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .dash-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+  }
+
+  .dash-action-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+
+  .dash-action-btn.green  { background: var(--green); }
+  .dash-action-btn.blue   { background: var(--blue); }
+  .dash-action-btn.purple { background: var(--purple); }
+
+  @media (max-width: 600px) {
+    .dash-header h1 { font-size: 28px; }
+    .card-count { font-size: 36px; }
+  }
 </style>
 
-<div class="dashboard-links">
-  <a href="{% url 'dashboard_categories' %}">Categories <span class="count">{{ categories_count }}</span></a>
-  <a href="{% url 'dashboard_products' %}">Products <span class="count">{{ products_count }}</span></a>
-  <a href="{% url 'dashboard_users' %}">Users <span class="count">{{ users_count }}</span></a>
+<div class="dashboard-wrap">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <p>Admin Panel</p>
+    <h1>Welcome back, <span>{{ request.user.username }}</span> 👋</h1>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="dash-cards">
+
+    <a href="{% url 'dashboard_categories' %}" class="dash-card green">
+      <div class="card-top">
+        <div class="card-icon"><i class="fas fa-tag"></i></div>
+        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <div>
+        <div class="card-count">{{ categories_count }}</div>
+        <div class="card-label">Categories</div>
+      </div>
+    </a>
+
+    <a href="{% url 'dashboard_products' %}" class="dash-card blue">
+      <div class="card-top">
+        <div class="card-icon"><i class="fas fa-box"></i></div>
+        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <div>
+        <div class="card-count">{{ products_count }}</div>
+        <div class="card-label">Products</div>
+      </div>
+    </a>
+
+    <a href="{% url 'dashboard_users' %}" class="dash-card purple">
+      <div class="card-top">
+        <div class="card-icon"><i class="fas fa-users"></i></div>
+        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <div>
+        <div class="card-count">{{ users_count }}</div>
+        <div class="card-label">Users</div>
+      </div>
+    </a>
+
+
+  </div>
+
+  <!-- Quick Actions -->
+  <h2 class="dash-section-title">Quick Actions</h2>
+
+  <div class="dash-actions">
+  {% if 'main/product' in request.path%}
+    <a href="{% url 'create_product' %}" class="dash-action-btn green">
+      <i class="fas fa-plus"></i> Add Product
+    </a>
+  {% elif 'main/categories' in request.path%}
+    <a href="{% url 'create_category' %}" class="dash-action-btn blue">
+      <i class="fas fa-folder-plus"></i> Add Category
+    </a>
+  {% elif 'main/users' in request.path%}
+    <a href="{% url 'dashboard_users' %}" class="dash-action-btn purple">
+      <i class="fas fa-user-plus"></i> Manage Users
+    </a>
+  {% endif %}
+  </div>
 </div>
-<hr>
 {% endblock content %}

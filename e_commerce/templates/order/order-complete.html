@@ -1,16 +1,299 @@
-<h2>Order Complete</h2>
+{% extends "base.html" %}
 
-<center><h4></h4></center>
-<strong>User</strong>: {{request.user.email}}<br>
-<strong>OrderID<strong>: {{order_id}}<br>
-<strong>PaymentID<strong>: {{payment_id}}<br>
-  <hr>
-{% for item in order_items %}
-<strong>OrderItemID</strong>: {{item.orderitem_id}}<br>
-<strong>Product</strong>: {{item.product.product_name}}<br>
-<strong>Product Price</strong>: {{item.product.price}}<br>
-<strong>quantity</strong>: {{item.quantity}}<br>
-<strong>Total</strong>: {{item.item_total}}<br>
-<hr>
-{% endfor %}
-<a href="{% url 'list_product' %}">Go To Home</a>
+{% block style %}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f4f1ec;
+    --card-bg: #ffffff;
+    --green: #2d6a4f;
+    --green-light: #40916c;
+    --accent: #f77f00;
+    --text: #1a1a2e;
+    --muted: #7a7a8c;
+    --border: #e8e4dc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .auth-page {
+    min-height: calc(100vh - 68px);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+  }
+
+  .auth-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, #c8c2b4 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: var(--card-bg);
+    border-radius: 22px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 36px rgba(0,0,0,0.09);
+    width: 100%;
+    max-width: 520px;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Success Header ── */
+  .card-head {
+    background: var(--green);
+    padding: 36px 36px 30px;
+    text-align: center;
+  }
+
+  .success-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.35);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 28px;
+    color: white;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    animation-delay: 0.2s;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .card-head h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .card-head p { font-size: 13px; color: rgba(255,255,255,0.72); }
+
+  /* ── Order Meta ── */
+  .order-meta {
+    padding: 24px 36px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: #faf9f6;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .meta-row .meta-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .meta-row .meta-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: right;
+    word-break: break-all;
+    max-width: 60%;
+  }
+
+  /* ── Items Section ── */
+  .items-section {
+    padding: 20px 36px 0;
+  }
+
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 14px;
+  }
+
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Order item rows */
+  .order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border);
+    gap: 12px;
+  }
+
+  .order-item:last-child { border-bottom: none; }
+
+  .item-left { flex: 1; }
+
+  .item-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .item-qty {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .item-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green);
+    white-space: nowrap;
+  }
+
+  /* ── Footer ── */
+  .card-footer {
+    padding: 24px 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-home {
+    width: 100%;
+    padding: 13px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(45,106,79,0.25);
+    text-decoration: none;
+  }
+
+  .btn-home:hover {
+    background: var(--green-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(45,106,79,0.30);
+  }
+
+  .thank-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .thank-note i { color: var(--accent); }
+
+  @media (max-width: 480px) {
+    .card-head    { padding: 26px 22px 22px; }
+    .order-meta   { padding: 18px 22px 0; }
+    .items-section{ padding: 16px 22px 0; }
+    .card-footer  { padding: 18px 22px 26px; }
+  }
+{% endblock style %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="card">
+
+    <!-- Success Header -->
+    <div class="card-head">
+      <div class="success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <h1>Order Confirmed!</h1>
+      <p>Your payment was successful. Thank you for shopping with us.</p>
+    </div>
+
+    <!-- Order Meta -->
+    <div class="order-meta">
+      <div class="meta-row">
+        <span class="meta-label">Customer</span>
+        <span class="meta-value">{{ request.user.email }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Order ID</span>
+        <span class="meta-value">#{{ order_id }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Payment ID</span>
+        <span class="meta-value">{{ payment_id }}</span>
+      </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="items-section">
+      <div class="section-divider">Items Ordered</div>
+
+      {% for item in order_items %}
+      <div class="order-item">
+        <div class="item-left">
+          <div class="item-name">{{ item.product.product_name }}</div>
+          <div class="item-qty">
+            ₹{{ item.product.price }} × {{ item.quantity }}
+          </div>
+        </div>
+        <div class="item-price">₹{{ item.item_total }}</div>
+      </div>
+      {% endfor %}
+
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <a href="{% url 'list_product' %}" class="btn-home">
+        <i class="fas fa-house"></i> Continue Shopping
+      </a>
+      <p class="thank-note">
+        <i class="fas fa-heart"></i>
+        We'll send a confirmation to {{ request.user.email }}
+      </p>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}

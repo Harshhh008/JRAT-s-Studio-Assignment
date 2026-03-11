@@ -1,200 +1,450 @@
 {% extends 'base.html' %}
 
+{% block style %}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f4f1ec;
+    --card-bg: #ffffff;
+    --green: #2d6a4f;
+    --green-light: #40916c;
+    --accent: #f77f00;
+    --blue: #1a73e8;
+    --red: #e63946;
+    --text: #1a1a2e;
+    --muted: #7a7a8c;
+    --border: #e8e4dc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { background: var(--bg); font-family: 'DM Sans', sans-serif; }
+
+  .profile-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  /* ── Section card ── */
+  .profile-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    overflow: hidden;
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .card-head-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .card-head-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .icon-green  { background: rgba(45,106,79,0.12);  color: var(--green); }
+  .icon-blue   { background: rgba(26,115,232,0.12); color: var(--blue); }
+  .icon-orange { background: rgba(247,127,0,0.12);  color: var(--accent); }
+
+  .card-head h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--text);
+  }
+
+  .card-body { padding: 24px 28px; }
+
+  /* ── Info grid ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+  }
+
+  .info-item {}
+
+  .info-item .info-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    margin-bottom: 4px;
+  }
+
+  .info-item .info-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .info-item .info-value.empty { color: var(--muted); font-style: italic; }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    color: white;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+  }
+
+  .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  .btn-green  { background: var(--green); }
+  .btn-blue   { background: var(--blue); }
+  .btn-red    { background: var(--red); }
+
+  /* ── Address cards ── */
+  .address-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .address-item {
+    background: #faf9f6;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    position: relative;
+  }
+
+  .address-item .addr-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .address-item p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .address-item p strong { color: var(--text); }
+
+  .address-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  /* ── Order cards ── */
+  .order-item {
+    background: #faf9f6;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .order-item + .order-item { margin-top: 14px; }
+
+  .order-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .order-id {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--text);
+  }
+
+  .order-id span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* Status badge */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .status-pending   { background: rgba(247,127,0,0.12);  color: var(--accent); }
+  .status-delivered { background: rgba(45,106,79,0.12);  color: var(--green); }
+  .status-cancelled { background: rgba(230,57,70,0.10);  color: var(--red); }
+  .status-default   { background: rgba(122,122,140,0.1); color: var(--muted); }
+
+  /* Payment badge */
+  .pay-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .pay-paid   { color: var(--green); }
+  .pay-unpaid { color: var(--red); }
+
+  /* Order items list */
+  .order-products {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .order-product-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text);
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .order-product-row:last-child { border-bottom: none; }
+
+  .order-product-row .qty {
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .order-total {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--text);
+  }
+
+  .order-date {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state i { font-size: 40px; opacity: 0.25; margin-bottom: 10px; display: block; }
+  .empty-state p { font-size: 15px; }
+
+  @media (max-width: 600px) {
+    .profile-wrap { padding: 20px 12px 40px; }
+    .card-body { padding: 18px 16px; }
+    .card-head { padding: 16px; }
+  }
+{% endblock style %}
+
 {% block content %}
-<style>
-/* General container */
-.container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
+<div class="profile-wrap">
 
-/* Sections */
-.section {
-  margin-bottom: 30px;
-}
-
-.section h2 {
-  text-align: center;
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 0;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-/* User info card */
-.user-info {
-  padding: 15px;
-  background-color: #fff;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-.user-info strong {
-  color: #333;
-}
-
-/* Buttons */
-.btn {
-  display: inline-block;
-  margin-top: 10px;
-  margin-right: 5px;
-  padding: 8px 15px;
-  background-color: #2196F3;
-  color: white;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-
-.btn:hover {
-  background-color: #1976d2;
-}
-
-/* Add / Edit / Delete Buttons */
-.btn-add {
-  background-color: #4CAF50;
-}
-
-.btn-add:hover {
-  background-color: #388E3C;
-}
-
-.btn-edit {
-  background-color: #2196F3;
-}
-
-.btn-edit:hover {
-  background-color: #1976d2;
-}
-
-.btn-delete {
-  background-color: #f44336;
-}
-
-.btn-delete:hover {
-  background-color: #d32f2f;
-}
-
-/* Address & Orders cards */
-.card {
-  background-color: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-.card h4 {
-  margin-bottom: 10px;
-  color: #4CAF50;
-}
-
-/* Section headers */
-.section-header {
-  text-align: center;
-  margin-bottom: 10px;
-  font-size: 18px;
-  color: #333;
-  text-decoration: underline;
-}
-
-/* Lists inside orders */
-.card ul {
-  list-style: disc;
-  padding-left: 20px;
-  margin-top: 5px;
-}
-
-.card ul li {
-  margin-bottom: 5px;
-}
-
-/* HR styling */
-.card hr {
-  border: none;
-  border-top: 1px solid #ddd;
-  margin: 15px 0;
-}
-</style>
-
-<div class="container">
-
-  <!-- User Info -->
-  <div class="section user-info">
-    <h2>Profile</h2>
-    <p><strong>Username:</strong> {{ user.username|default:'' }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>First Name:</strong> {{ user.first_name|default:'' }}</p>
-    <p><strong>Last Name:</strong> {{ user.last_name|default:'' }}</p>
-    <p><strong>Phone:</strong> {{ user.phone_number|default:'' }}</p>
-    <p><strong>Date of Birth:</strong> {{ user.date_of_birth|default:'' }}</p>
-    <a href="{% url 'edit_profile' user.id %}" class="btn btn-edit">
-      <i class="fa-solid fa-pen-to-square"></i> Edit Profile
-    </a>
-  </div>
-
-  <!-- Addresses -->
-  <div class="section">
-    <div class="section-header">Your Addresses</div>
-    <a href="{% url 'add_address' %}" class="btn btn-add">
-      <i class="fa-solid fa-plus"></i> Add New Address
-    </a>
-    {% for address in user_addresses %}
-    <div class="card">
-      <h4>Address - {{ forloop.counter }}</h4>
-      <p><strong>House Number:</strong> {{ address.house_num }}</p>
-      <p><strong>Building:</strong> {{ address.building_name }}</p>
-      <p><strong>Area:</strong> {{ address.area }}</p>
-      <p><strong>City:</strong> {{ address.city }}</p>
-      <p><strong>State:</strong> {{ address.state }}</p>
-      <p><strong>Pin Code:</strong> {{ address.pincode }}</p>
-      <a href="{% url 'edit_address' address.id %}" class="btn btn-edit">
-        <i class="fa-solid fa-pen-to-square"></i> Edit
+  <!-- ── Profile Info ── -->
+  <div class="profile-card">
+    <div class="card-head">
+      <div class="card-head-left">
+        <div class="card-head-icon icon-green"><i class="fas fa-user"></i></div>
+        <h2>My Profile</h2>
+      </div>
+      <a href="{% url 'edit_profile' user.id %}" class="btn btn-blue">
+        <i class="fas fa-pen"></i> Edit Profile
       </a>
-      {% if not forloop.last %}
-      <hr>
-      {% endif %}
     </div>
-    {% empty %}
-    <p style="text-align:center;">No addresses found.</p>
-    {% endfor %}
+    <div class="card-body">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Username</div>
+          <div class="info-value {% if not user.username %}empty{% endif %}">
+            {{ user.username|default:"Not set" }}
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <div class="info-value">{{ user.email }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">First Name</div>
+          <div class="info-value {% if not user.first_name %}empty{% endif %}">
+            {{ user.first_name|default:"Not set" }}
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Last Name</div>
+          <div class="info-value {% if not user.last_name %}empty{% endif %}">
+            {{ user.last_name|default:"Not set" }}
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Phone</div>
+          <div class="info-value {% if not user.phone_number %}empty{% endif %}">
+            {{ user.phone_number|default:"Not set" }}
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Date of Birth</div>
+          <div class="info-value {% if not user.date_of_birth %}empty{% endif %}">
+            {{ user.date_of_birth|default:"Not set" }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Orders -->
-  <div class="section">
-    <div class="section-header">Your Orders</div>
-    {% for order in orders %}
-    <div class="card">
-      <h4>Order - {{ forloop.counter }}</h4>
-      <p><strong>Order ID:</strong> {{ order.order_id }}</p>
-      <p><strong>Status:</strong> {{ order.status }}</p>
-      <p><strong>Products:</strong></p>
-      <ul>
-        {% for item in order.order_item.all %}
-        <li>{{ item.product.product_name }} x <strong>{{ item.quantity }}</strong></li>
-        {% endfor %}
-      </ul>
-      <p><strong>Total Amount:</strong> {{ order.total_amount }}</p>
-      <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
-      <p><strong>Payment Status:</strong> {{ order.payment.status }}</p>
-      <p><strong>Date:</strong> {{ order.created_at }}</p>
-      {% if not forloop.last %}
-      <hr>
+  <!-- ── Addresses ── -->
+  <div class="profile-card">
+    <div class="card-head">
+      <div class="card-head-left">
+        <div class="card-head-icon icon-orange"><i class="fas fa-location-dot"></i></div>
+        <h2>My Addresses</h2>
+      </div>
+      <a href="{% url 'add_address' %}" class="btn btn-green">
+        <i class="fas fa-plus"></i> Add Address
+      </a>
+    </div>
+    <div class="card-body">
+      {% if user_addresses %}
+        <div class="address-grid">
+          {% for address in user_addresses %}
+          <div class="address-item">
+            <div class="addr-num">Address {{ forloop.counter }}</div>
+            <p>
+              {{ address.house_num }}, {{ address.building_name }}<br>
+              {{ address.area }}<br>
+              {{ address.city }}, {{ address.state }} — {{ address.pincode }}
+            </p>
+            <div class="address-actions">
+              <a href="{% url 'edit_address' address.id %}" class="btn btn-blue">
+                <i class="fas fa-pen"></i> Edit
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <i class="fas fa-location-dot"></i>
+          <p>No addresses saved yet.</p>
+        </div>
       {% endif %}
     </div>
-    {% empty %}
-    <p style="text-align:center;">No orders found.</p>
-    {% endfor %}
+  </div>
+
+  <!-- ── Orders ── -->
+  <div class="profile-card">
+    <div class="card-head">
+      <div class="card-head-left">
+        <div class="card-head-icon icon-blue"><i class="fas fa-receipt"></i></div>
+        <h2>My Orders</h2>
+      </div>
+    </div>
+    <div class="card-body">
+      {% if orders %}
+        {% for order in orders %}
+        <div class="order-item">
+
+          <div class="order-top">
+            <div class="order-id">
+              Order #{{ order.order_id }}
+              <span> · {{ order.created_at|date:"d M Y" }}</span>
+            </div>
+
+            {% with status=order.status|lower %}
+              {% if status == 'pending' %}
+                <span class="status-badge status-pending"><i class="fas fa-clock"></i> Pending</span>
+              {% elif status == 'delivered' %}
+                <span class="status-badge status-delivered"><i class="fas fa-check-circle"></i> Delivered</span>
+              {% elif status == 'cancelled' %}
+                <span class="status-badge status-cancelled"><i class="fas fa-times-circle"></i> Cancelled</span>
+              {% else %}
+                <span class="status-badge status-default">{{ order.status }}</span>
+              {% endif %}
+            {% endwith %}
+          </div>
+
+          <!-- Products -->
+          <div class="order-products">
+            {% for item in order.order_item.all %}
+            <div class="order-product-row">
+              <span>{{ item.product.product_name }}</span>
+              <span class="qty">× {{ item.quantity }}</span>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="order-footer">
+            <div>
+              <div class="order-total">₹{{ order.total_amount }}</div>
+              <div style="font-size:12px; color:var(--muted); margin-top:2px;">
+                {{ order.shipping_address }}
+              </div>
+            </div>
+            {% if order.payment.status|lower == 'paid' %}
+              <span class="pay-badge pay-paid"><i class="fas fa-check-circle"></i> Paid</span>
+            {% else %}
+              <span class="pay-badge pay-unpaid"><i class="fas fa-times-circle"></i> Unpaid</span>
+            {% endif %}
+          </div>
+
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <i class="fas fa-receipt"></i>
+          <p>No orders placed yet.</p>
+        </div>
+      {% endif %}
+    </div>
   </div>
 
 </div>
-
-{% endblock content%}
+{% endblock content %}

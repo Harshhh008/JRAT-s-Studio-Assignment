@@ -1,8 +1,263 @@
-<h1>Register</h1>
+{% extends "base.html" %}
 
-<form action="" method="POST">
-  {% csrf_token %}
-  {{form.as_p}}
-  <input type="submit" value="Signup">
-  <a href="{% url 'login' %}">Signin</a>
-</form>
+{% block style %}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f4f1ec;
+    --card-bg: #ffffff;
+    --green: #2d6a4f;
+    --green-light: #40916c;
+    --red: #e63946;
+    --text: #1a1a2e;
+    --muted: #7a7a8c;
+    --border: #e8e4dc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Page wrapper — centers card below navbar ── */
+  .auth-page {
+    min-height: calc(100vh - 68px); /* subtract navbar height */
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+  }
+
+  .auth-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, #c8c2b4 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: var(--card-bg);
+    border-radius: 22px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 36px rgba(0,0,0,0.09);
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header ── */
+  .card-head {
+    background: var(--green);
+    padding: 32px 36px 28px;
+    text-align: center;
+  }
+
+  .card-head .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: white;
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
+  }
+
+  .card-head .brand span {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #f77f00;
+    border-radius: 50%;
+    margin-left: 2px;
+    vertical-align: super;
+  }
+
+  .card-head p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.72);
+  }
+
+  /* ── Form body ── */
+  .card-body {
+    padding: 30px 36px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .card-body p {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .card-body label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .card-body input[type="text"],
+  .card-body input[type="email"],
+  .card-body input[type="password"],
+  .card-body input[type="number"],
+  .card-body input[type="date"],
+  .card-body select,
+  .card-body textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: #faf9f6;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .card-body input:focus,
+  .card-body select:focus,
+  .card-body textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.10);
+    background: #fff;
+  }
+
+  .card-body .helptext {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .card-body .errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .card-body .errorlist li {
+    font-size: 12px;
+    color: var(--red);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .card-body .errorlist li::before {
+    content: '\f071';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 10px;
+  }
+
+  /* ── Footer ── */
+  .card-footer {
+    padding: 24px 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 13px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(45,106,79,0.25);
+  }
+
+  .btn-submit:hover {
+    background: var(--green-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(45,106,79,0.30);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .signin-link {
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .signin-link a {
+    color: var(--green);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .signin-link a:hover { text-decoration: underline; }
+
+  @media (max-width: 480px) {
+    .card-head  { padding: 26px 22px 22px; }
+    .card-body  { padding: 22px 22px 8px; }
+    .card-footer{ padding: 18px 22px 26px; }
+  }
+{% endblock style %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="card">
+
+    <div class="card-head">
+      <div class="brand">JRat's<span></span></div>
+      <p>Create your account to get started</p>
+    </div>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="card-body">
+        {{ form.as_p }}
+      </div>
+      <div class="card-footer">
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+        <div class="divider">or</div>
+        <p class="signin-link">
+          Already have an account?
+          <a href="{% url 'login' %}">Sign In</a>
+        </p>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock content %}

@@ -1,131 +1,348 @@
 <style>
-/* Navbar container */
-.nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 30px;
-  background-color: #4CAF50;
-  color: white;
-  font-family: Arial, sans-serif;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  flex-wrap: wrap;
-}
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
 
-/* Logo / brand */
-.nav a h1 {
-  margin: 0;
-  font-size: 35px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  cursor: default;
-  color: white;
-}
+  :root {
+    --green: #2d6a4f;
+    --green-light: #40916c;
+    --accent: #f77f00;
+    --text: #1a1a2e;
+    --muted: #7a7a8c;
+    --bg: #f4f1ec;
+    --border: #e8e4dc;
+    --white: #ffffff;
+  }
 
-/* Right side links and search */
-.nav .right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-.nav .right a {
-  text-decoration: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 5px;
-  font-weight: bold;
-  transition: 0.3s;
-}
+  /* ── Main Navbar ── */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 36px;
+    height: 68px;
+    background: var(--green);
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    gap: 16px;
+  }
 
-.nav .right a:hover {
-  background-color: #3e8e41;
-}
+  /* Brand */
+  .nav-brand a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-/* Search box styling */
-.nav .right form {
-  display: flex;
-  align-items: center;
-}
+  .nav-brand h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.5px;
+    line-height: 1;
+  }
 
-.nav .right input[type="text"] {
-  padding: 6px 10px;
-  border-radius: 5px 0 0 5px;
-  border: none;
-  outline: none;
-}
+  .nav-brand .brand-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 2px;
+    vertical-align: super;
+    flex-shrink: 0;
+  }
 
-.nav .right input[type="submit"] {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 0 5px 5px 0;
-  background-color: #2196F3;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
+  /* Search */
+  .nav-search {
+    flex: 1;
+    max-width: 380px;
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.25);
+    overflow: hidden;
+    transition: background 0.2s, border 0.2s;
+  }
 
-.nav .right input[type="submit"]:hover {
-  background-color: #1976d2;
-}
+  .nav-search:focus-within {
+    background: rgba(255,255,255,0.22);
+    border-color: rgba(255,255,255,0.5);
+  }
 
-/* Categories bar */
-.cat {
-  display: flex;
-  gap: 10px;
-  padding: 10px 30px;
-  background-color: #f2f2f2;
-  border-bottom: 1px solid #ddd;
-  flex-wrap: wrap;
-}
+  .nav-search i {
+    color: rgba(255,255,255,0.7);
+    padding: 0 12px;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
 
-.cat a {
-  text-decoration: none;
-  padding: 6px 12px;
-  background-color: #fff;
-  color: #333;
-  border-radius: 5px;
-  transition: 0.3s;
-  font-weight: bold;
-}
+  .nav-search input[type="text"] {
+    flex: 1;
+    padding: 9px 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+  }
 
-.cat a:hover {
-  background-color: #4CAF50;
-  color: white;
-}
+  .nav-search input[type="text"]::placeholder {
+    color: rgba(255,255,255,0.6);
+  }
+
+  .nav-search button {
+    padding: 9px 18px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-left: 1px solid rgba(255,255,255,0.2);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .nav-search button:hover { background: rgba(255,255,255,0.3); }
+
+  /* Nav links */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: rgba(255,255,255,0.88);
+    padding: 7px 13px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-links a:hover {
+    background: rgba(255,255,255,0.15);
+    color: var(--white);
+  }
+
+  .nav-links a i { font-size: 13px; }
+
+  /* Cart badge */
+  .cart-link {
+    position: relative;
+  }
+
+  .cart-link .cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--green);
+  }
+
+  /* Auth buttons */
+  .btn-signin, .btn-signup {
+    padding: 7px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+  }
+
+  .btn-signin {
+    border: 1.5px solid rgba(255,255,255,0.5) !important;
+  }
+
+  .btn-signin:hover {
+    background: rgba(255,255,255,0.15) !important;
+    border-color: rgba(255,255,255,0.8) !important;
+  }
+
+  .btn-signup {
+    background: var(--accent) !important;
+    color: white !important;
+    border: none !important;
+  }
+
+  .btn-signup:hover {
+    background: #e06e00 !important;
+    transform: translateY(-1px);
+  }
+
+  /* Divider */
+  .nav-divider {
+    width: 1px;
+    height: 22px;
+    background: rgba(255,255,255,0.25);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
+
+  /* ── Categories Bar ── */
+  .cat {
+    display: flex;
+    gap: 6px;
+    padding: 10px 36px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    align-items: center;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .cat-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+
+  .cat a {
+    text-decoration: none;
+    padding: 5px 14px;
+    background: transparent;
+    color: var(--text);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1.5px solid var(--border);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .cat a:hover, .cat a.active {
+    background: var(--green);
+    color: var(--white);
+    border-color: var(--green);
+  }
+
+  .cat a.all-link {
+    background: var(--green);
+    color: var(--white);
+    border-color: var(--green);
+    font-weight: 600;
+  }
+
+  .cat a.all-link:hover {
+    background: var(--green-light);
+    border-color: var(--green-light);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .nav { padding: 0 20px; height: auto; flex-wrap: wrap; padding: 12px 20px; gap: 10px; }
+    .nav-search { max-width: 100%; order: 3; width: 100%; }
+    .nav-links a span { display: none; }
+    .nav-links a { padding: 8px 10px; }
+    .cat { padding: 10px 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .nav-brand h1 { font-size: 22px; }
+    .btn-signin span, .btn-signup span { display: inline !important; }
+  }
 </style>
 
-<div class="nav">
-  <div>
-    <a href="{% url 'list_product' %}"><h1>JRat's</h1></a>
-  </div>
-  <div class="right">
-    <form action="{% url 'search_product' %}">
-      <input type="text" name="q" placeholder="Search Product">
-      <input type="submit" value="Go">
-    </form>
-    <a href="{% url 'cart_view' %}"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
-    {% if request.user.is_staff or request.user.is_superuser and request.user.is_authenticated %}
-    <a href="{% url 'dashboard_main' %}"><i class="fa-solid fa-user"></i> Dashboard</a>
-    {% else %}
-    <a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i> Profile</a>
-    {% endif %}
-    {% if request.user.is_authenticated %}
-      <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-    {% else %}
-      <a href="{% url 'login' %}"><i class="fa-solid fa-right-from-bracket"></i> SingIn</a>
-      <a href="{% url 'register' %}"><i class="fa-solid fa-right-from-bracket"></i> SingUp</a>
-    {% endif %}
-  </div>
-</div>
+<nav class="nav">
 
+  <!-- Brand -->
+  <div class="nav-brand">
+    <a href="{% url 'list_product' %}">
+      <h1>JRat's<span class="brand-dot"></span></h1>
+    </a>
+  </div>
+
+  <!-- Search -->
+  <form class="nav-search" action="{% url 'search_product' %}" method="get">
+    <i class="fas fa-search"></i>
+    <input type="text" name="q" placeholder="Search products…" autocomplete="off">
+    <button type="submit">Search</button>
+  </form>
+
+  <!-- Links -->
+  <div class="nav-links">
+
+    <!-- Cart -->
+    <a href="{% url 'cart_view' %}" class="cart-link">
+      <i class="fas fa-shopping-cart"></i>
+      <span>Cart</span>
+      {% if cart_count and cart_count > 0 %}
+        <span class="cart-badge">{{ cart_count }}</span>
+      {% endif %}
+    </a>
+
+    <div class="nav-divider"></div>
+
+    <!-- Dashboard / Profile -->
+    {% if request.user.is_staff or request.user.is_superuser and request.user.is_authenticated %}
+      <a href="{% url 'dashboard_main' %}">
+        <i class="fas fa-gauge-high"></i>
+        <span>Dashboard</span>
+      </a>
+    {% else %}
+      <a href="{% url 'profile' %}">
+        <i class="fas fa-user-circle"></i>
+        <span>Profile</span>
+      </a>
+    {% endif %}
+
+    <!-- Auth -->
+    {% if request.user.is_authenticated %}
+      <a href="{% url 'logout' %}">
+        <i class="fas fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+    {% else %}
+      <div class="nav-divider"></div>
+      <a href="{% url 'login' %}" class="btn-signin">
+        <i class="fas fa-right-to-bracket"></i>
+        <span>Sign In</span>
+      </a>
+      <a href="{% url 'register' %}" class="btn-signup">
+        <i class="fas fa-user-plus"></i>
+        <span>Sign Up</span>
+      </a>
+    {% endif %}
+
+  </div>
+</nav>
+
+<!-- Categories bar — hidden on dashboard -->
 {% if not 'dashboard' in request.path %}
 <div class="cat">
-  <a href="{% url 'list_product' %}">All</a>
+  <span class="cat-label">Browse:</span>
+  <a href="{% url 'list_product' %}" class="{% if not category_id %}all-link {% endif %}">All</a>
   {% for category in categories %}
-    <a href="{% url 'list_by_category' category.id %}">{{ category.category_name }}</a>
+    <a href="{% url 'list_by_category' category.id %}"
+       {% if category_id == category.id %}class="active"{% endif %}>
+      {{ category.category_name }}
+    </a>
   {% endfor %}
 </div>
 {% endif %}

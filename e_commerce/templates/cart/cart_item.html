@@ -1,19 +1,273 @@
-{% for cart_item in cart_items %}
-<img src="{{cart_item.product.product_image.all.0.image.url }}" alt="{{product.name}}"><br>
-  <strong>Product Name</strong>: <a href="{% url 'get_product' cart_item.product.id %}">{{cart_item.product.product_name}}</a><br>
-  <strong>Description </strong>: {{cart_item.product.description}}<br>
-  <strong>Price </strong>: {{cart_item.product.price}}<br>
-  <strong>Quantity </strong>:{{cart_item.quantity}}<br>
-  <strong>Item Total </strong>:{{cart_item.item_total|floatformat:2}}<br>
-  {% if cart_item.product.stock > 0%}<a href="{% url 'add_to_cart' cart_item.product.id %}">Increase Quantity</a> | {% endif %}
-  <a href="{% url 'remove_from_cart' cart_item.product.id %}">Decrease Quantity </a> 
-    {% if not foorloop.last %}
-      <hr>
-    {% endif %}
-{% empty %}
-<center><h3>Cart is empty.</h3></center>
-{% endfor %}
+{% extends "base.html" %}
 
-<center><h2>Sub Total : {{cart.total}}</h2>
-<a href="{% url 'create_order' %}">Proceed to Checkout</a>
-</center>
+{% block style %}
+  .cart-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 16px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .cart-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 24px;
+  }
+
+  .cart-item {
+    display: flex;
+    gap: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.08);
+    padding: 18px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+  }
+
+  .cart-item-img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #f5f5f5;
+    flex-shrink: 0;
+    border: 1px solid #eee;
+  }
+
+  .cart-item-info {
+    flex: 1;
+  }
+
+  .cart-item-info h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: #222;
+  }
+
+  .cart-item-info h3 a {
+    text-decoration: none;
+    color: #1a73e8;
+    transition: color 0.2s;
+  }
+
+  .cart-item-info h3 a:hover {
+    color: #0d47a1;
+  }
+
+  .cart-item-info p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .cart-item-info p strong {
+    color: #333;
+  }
+
+  .item-total {
+    font-size: 15px;
+    font-weight: bold;
+    color: #2e7d32;
+    margin-top: 8px;
+  }
+
+  /* Quantity controls */
+  .qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .qty-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    transition: background 0.2s, transform 0.2s;
+    line-height: 1;
+  }
+
+  .qty-btn.increase {
+    background: #4CAF50;
+  }
+
+  .qty-btn.increase:hover {
+    background: #388E3C;
+    transform: scale(1.1);
+  }
+
+  .qty-btn.decrease {
+    background: #f44336;
+  }
+
+  .qty-btn.decrease:hover {
+    background: #c62828;
+    transform: scale(1.1);
+  }
+
+  .qty-value {
+    font-size: 16px;
+    font-weight: bold;
+    min-width: 24px;
+    text-align: center;
+    color: #333;
+  }
+
+  /* Summary card */
+  .cart-summary {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.08);
+    padding: 22px 28px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .cart-summary h2 {
+    font-size: 22px;
+    color: #222;
+    margin: 0;
+  }
+
+  .checkout-btn {
+    background: #2196F3;
+    color: white;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 3px 8px rgba(33,150,243,0.25);
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .checkout-btn:hover {
+    background: #1565C0;
+    transform: translateY(-2px);
+  }
+
+  /* Empty cart */
+  .empty-cart {
+    text-align: center;
+    padding: 60px 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.08);
+  }
+
+  .empty-cart i {
+    font-size: 56px;
+    color: #ccc;
+    margin-bottom: 16px;
+  }
+
+  .empty-cart h3 {
+    font-size: 22px;
+    color: #888;
+    margin: 0 0 8px;
+  }
+
+  .empty-cart p {
+    color: #aaa;
+    font-size: 14px;
+  }
+
+  .shop-btn {
+    display: inline-block;
+    margin-top: 18px;
+    background: #2196F3;
+    color: white;
+    padding: 10px 26px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+
+  .shop-btn:hover { background: #1565C0; }
+
+  @media (max-width: 600px) {
+    .cart-item { flex-direction: column; }
+    .cart-item-img { width: 100%; height: 200px; }
+    .cart-summary { flex-direction: column; align-items: stretch; text-align: center; }
+    .checkout-btn { text-align: center; }
+  }
+{% endblock style %}
+
+{% block content %}
+<div class="cart-container">
+  <h1 class="cart-title">🛒 Your Cart</h1>
+
+  {% for cart_item in cart_items %}
+    <div class="cart-item">
+
+      <!-- Product Image -->
+      {% with img=cart_item.product.product_image.all.0 %}
+        {% if img %}
+          <img src="{{ img.image.url }}" alt="{{ cart_item.product.product_name }}" class="cart-item-img">
+        {% else %}
+          <div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;color:#bbb;">
+            <i class="fas fa-image" style="font-size:40px;"></i>
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Product Info -->
+      <div class="cart-item-info">
+        <h3>
+          <a href="{% url 'get_product' cart_item.product.id %}">
+            {{ cart_item.product.product_name }}
+          </a>
+        </h3>
+
+        <p><strong>Description:</strong> {{ cart_item.product.description }}</p>
+        <p><strong>Price:</strong> ₹{{ cart_item.product.price }}</p>
+        <p class="item-total">
+          Item Total: ₹{{ cart_item.item_total|floatformat:2 }}
+        </p>
+
+        <!-- Quantity Controls -->
+        <div class="qty-controls">
+          <a href="{% url 'remove_from_cart' cart_item.product.id %}" class="qty-btn decrease" title="Decrease">−</a>
+          <span class="qty-value">{{ cart_item.quantity }}</span>
+          {% if cart_item.product.stock > 0 %}
+            <a href="{% url 'add_to_cart' cart_item.product.id %}" class="qty-btn increase" title="Increase">+</a>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+  {% empty %}
+    <div class="empty-cart">
+      <i class="fas fa-shopping-cart"></i>
+      <h3>Your cart is empty!</h3>
+      <p>Looks like you haven't added anything yet.</p>
+      <a href="{% url 'list_product' %}" class="shop-btn">Continue Shopping</a>
+    </div>
+  {% endfor %}
+
+  <!-- Cart Summary -->
+  {% if cart_items %}
+    <div class="cart-summary">
+      <h2>Subtotal: ₹{{ cart.total|floatformat:2 }}</h2>
+      <a href="{% url 'create_order' %}" class="checkout-btn">Proceed to Checkout →</a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock content %}

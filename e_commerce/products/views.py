@@ -70,7 +70,7 @@ def add_images(request, pk=None):
             return redirect('get_product', pk)
     product_image_form = ProductImageForm()
     return render(
-        request, "products/add_images.html", {"product_image_form": product_image_form}
+        request, "products/add_images.html", {"product_image_form": product_image_form, 'product': product}
     )
 
 def remove_images(request, p_pk=None, pk=None):
