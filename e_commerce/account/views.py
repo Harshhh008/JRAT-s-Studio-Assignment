@@ -156,6 +156,7 @@ def reset_password_confirm_view(request, user_id, token):
   token = default_token_generator.check_token(user, token)
   if not token:
     messages.error(request, "This link expired or invalid.")
+    return redirect('reset_password')
   else:
     if request.method == "POST":
       form = SetPasswordForm(user, request.POST)
@@ -167,4 +168,4 @@ def reset_password_confirm_view(request, user_id, token):
       else:
         print(form.errors)
     form = SetPasswordForm(user)
-  return render(request, 'account/reset_password_confirm.html', {'form': form})
+    return render(request, 'account/reset_password_confirm.html', {'form': form})
