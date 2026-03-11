@@ -10,7 +10,7 @@ def dashboard_counts(request):
             'categories_count': Category.objects.count(),
             'users_count': User.objects.count(),
             'order_items_count': OrderItem.objects.count(),
-            'orders_count': Order.objects.count(),
-            'total_sales': OrderItem.objects.aggregate(total_sale=Sum(F('price') * F('quantity'), output_field=DecimalField()))['total_sale']
+            'orders_count': Order.objects.filter(status="processing").count(),
+            'total_sales': OrderItem.objects.aggregate(total_sale=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=DecimalField())))['total_sale'] or 0
         }
     return {}
