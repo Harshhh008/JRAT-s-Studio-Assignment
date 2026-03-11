@@ -47,6 +47,7 @@ class Product(BaseModel):
     description = models.TextField(blank=True)
     stock = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     price = models.DecimalField(decimal_places=2, max_digits=10)
+    selling = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return str(self.product_name)

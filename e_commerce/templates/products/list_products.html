@@ -213,6 +213,185 @@
   .stock-text.in  { color: var(--green); font-weight: 600; }
   .stock-text.out { color: var(--red);   font-weight: 600; }
 
+  /* ── Top Picked Section ── */
+  .top-section {
+    margin-bottom: 48px;
+  }
+
+  .top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+  }
+
+  .top-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 4px !important;
+  }
+
+  .top-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .top-title span { color: var(--green); }
+
+  .top-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .top-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  {% for i in "12345" %}
+  .top-card:nth-child({{ forloop.counter }}) { animation-delay: {{ forloop.counter0 }}00ms; }
+  {% endfor %}
+
+  .top-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* Rank badge */
+  .top-rank {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    background: var(--text);
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Gold/silver/bronze for top 3 */
+  .top-card:nth-child(1) .top-rank { background: #f59e0b; }
+  .top-card:nth-child(2) .top-rank { background: #94a3b8; }
+  .top-card:nth-child(3) .top-rank { background: #b45309; }
+
+  .top-img-wrap {
+    width: 100%;
+    height: 160px;
+    background: #f0ede6;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .top-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .top-card:hover .top-img-wrap img { transform: scale(1.06); }
+
+  .top-info {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .top-category {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .top-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .top-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .top-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .top-stock {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+
+  .top-stock.in  {
+    background: rgba(247,127,0,0.10);
+    color: var(--accent);
+  }
+
+  .top-stock.out {
+    background: rgba(230,57,70,0.10);
+    color: var(--red);
+  }
+
+  /* Section divider between top picks and all products */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    border-radius: 1px;
+  }
+
   /* Card footer */
   .card-footer {
     padding: 0 20px 20px;
@@ -304,6 +483,55 @@
       {% endif %}
     </div>
   </div>
+
+    <!-- ── Top Picked ── -->
+  {% if top_selling_products %}
+  <div class="top-section">
+    <div class="top-header">
+      <div>
+        <p class="top-label">Trending Now</p>
+        <h2 class="top-title">Top <span>Picked</span> Products 🔥</h2>
+      </div>
+    </div>
+
+    <div class="top-grid">
+      {% for product in top_selling_products %}
+      <a href="{% url 'get_product' product.id %}" class="top-card">
+
+        <div class="top-rank">#{{ forloop.counter }}</div>
+
+        <div class="top-img-wrap">
+          {% with img=product.product_image.all.0 %}
+            {% if img %}
+              <img src="{{ img.image.url }}" alt="{{ product.product_name }}">
+            {% else %}
+              <div class="no-img"><i class="fas fa-image"></i></div>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+        <div class="top-info">
+          <span class="top-category">{{ product.category.category_name }}</span>
+          <div class="top-name">{{ product.product_name }}</div>
+          <div class="top-bottom">
+            <span class="top-price">₹{{ product.price }}</span>
+            {% if product.stock > 0 %}
+              <span class="top-stock in"><i class="fas fa-fire"></i> {{ product.selling }} sold</span>
+            {% else %}
+              <span class="top-stock out">Out of stock</span>
+            {% endif %}
+          </div>
+        </div>
+
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="section-divider">
+    <span>All Products</span>
+  </div>
+  {% endif %}
 
   <!-- Grid -->
   <div class="products">

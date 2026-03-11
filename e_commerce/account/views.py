@@ -3,10 +3,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
 from .models import UserAddress
 from order.models import Order
-from products.models import Product, Category
 
 from .forms import UserCreationForm, AuthenticationForm, UserProfileForm, UserAddressForm
 

@@ -87,3 +87,10 @@
 
 
 ## pagination
+
+## messages for every view (success or failed)
+
+## analytics (total sale, top products)
+
+- [x] total sale
+- [] top products

@@ -61,6 +61,7 @@ def payments(request):
     # reduce product stock after order item create
     product = item.product
     product.stock -= item.quantity
+    product.selling += item.quantity
     product.save()
     
   # remove all cart item after payment

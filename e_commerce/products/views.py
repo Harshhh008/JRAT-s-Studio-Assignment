@@ -81,6 +81,7 @@ def remove_images(request, p_pk=None, pk=None):
 
 def list_product(request, pk=None):
     category_name = None
+    top_selling_products = None
     if pk:
         products = (
             Product.objects.select_related("category")
@@ -94,7 +95,8 @@ def list_product(request, pk=None):
             .prefetch_related("product_image")
             .order_by('-created_at')
         )
-    return render(request, "products/list_products.html", {"products": products, "category_id": pk if pk else None, "category_name": category_name})
+        top_selling_products = Product.objects.select_related('category').prefetch_related("product_image").order_by('-selling')[:5]
+    return render(request, "products/list_products.html", {"products": products, "category_id": pk if pk else None, "category_name": category_name, "top_selling_products": top_selling_products})
 
 
 def get_product(request, pk):
