@@ -297,14 +297,6 @@
       <p>Browse and manage your product catalogue</p>
     </div>
     <div class="right">
-      {% if 'category' in request.path %}
-        <a href="{% url 'category_update' category_id %}" class="action-btn update">
-          <i class="fas fa-pen"></i> Edit Category
-        </a>
-        <a href="{% url 'category_delete' category_id %}" class="action-btn delete">
-          <i class="fas fa-trash"></i> Delete Category
-        </a>
-      {% endif %}
       {% if request.user.is_authenticated and request.user.is_staff or request.user.is_superuser %}
         <a href="{% url 'create_product' %}" class="action-btn add">
           <i class="fas fa-plus"></i> Add Product

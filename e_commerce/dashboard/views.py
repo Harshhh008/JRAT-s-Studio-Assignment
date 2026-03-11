@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from products.models import Product, Category
+from products.models import Product
+from order.models import OrderItem
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import get_user_model
 
@@ -25,3 +26,7 @@ def dashboard_products(request):
 def dashboard_users(request):
   users = User.objects.all()
   return render(request, 'dashboard/data.html', {'users': users})
+
+def dashboard_ordered_items(request):
+  order_items = OrderItem.objects.select_related('order', 'product', 'order__user', 'product__category', 'order__payment').prefetch_related('order__user__address').all()
+  return render(request, 'dashboard/data.html', {'order_items': order_items})

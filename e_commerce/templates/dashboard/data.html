@@ -244,6 +244,13 @@
     .table-wrap { padding: 0 12px 40px; }
     .dashboard-table th, .dashboard-table td { padding: 10px 12px; }
   }
+
+  .table-wrap {
+  max-width: 1400px; /* was 1100px */
+  margin: 0 auto;
+  padding: 0 24px 60px;
+  font-family: 'DM Sans', sans-serif;
+}
 </style>
 
 <div class="table-wrap">
@@ -424,6 +431,142 @@
             <td colspan="9">
               <i class="fas fa-users"></i>
               No users found.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ── ORDERED ITEMS ── -->
+  {% elif 'main/ordered' in request.path %}
+  <div class="table-header">
+    <h2>All <span>Ordered Items</span></h2>
+  </div>
+  <div class="table-card">
+    <div class="table-scroll" style="overflow-x: auto; overflow-y: auto; max-height: 620px;">
+      <table class="dashboard-table">
+        <thead style="position: sticky; top: 0; z-index: 2;">
+          <tr>
+            <th>#</th>
+            <th>Item ID</th>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Shipping Address</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Item Total</th>
+            <th>Order Status</th>
+            <th>Payment</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order_items %}
+          <tr>
+            <td class="row-num">{{ forloop.counter }}</td>
+
+            <td style="font-size:12px; color:var(--muted); font-weight:600; white-space:nowrap;">
+              #{{ item.orderitem_id }}
+            </td>
+
+            <td style="font-size:12px; color:var(--muted); white-space:nowrap;">
+              #{{ item.order.order_id }}
+            </td>
+
+            <td>
+              <div style="font-size:13px; font-weight:600; color:var(--text);">
+                {{ item.order.user.full_name|default:item.order.user.username }}
+              </div>
+              <div style="font-size:11px; color:var(--muted); margin-top:2px;">
+                {{ item.order.user.email }}
+              </div>
+              {% if item.order.user.phone_number %}
+              <div style="font-size:11px; color:var(--muted);">
+                {{ item.order.user.phone_number }}
+              </div>
+              {% endif %}
+            </td>
+
+            <td style="min-width:200px;">
+              {% with addr=item.order.user.address.all.0 %}
+                {% if addr %}
+                  <div style="font-size:13px; color:var(--text); line-height:1.55;">
+                    {{ addr.house_num }}, {{ addr.building_name }}<br>
+                    {{ addr.area }}, {{ addr.city }}<br>
+                    <span style="font-weight:600;">{{ addr.state }} — {{ addr.pincode }}</span>
+                  </div>
+                {% else %}
+                  <span style="color:var(--muted); font-size:13px;">—</span>
+                {% endif %}
+              {% endwith %}
+            </td>
+
+            <td style="min-width:160px;">
+              <div class="cell-name">{{ item.product.product_name }}</div>
+              <div><span class="cat-pill">{{ item.product.category.category_name }}</span></div>
+            </td>
+
+            <td>
+              <span style="
+                display:inline-flex;align-items:center;justify-content:center;
+                width:30px;height:30px;background:rgba(45,106,79,0.10);
+                color:var(--green);border-radius:8px;font-weight:700;font-size:13px;
+              ">{{ item.quantity }}</span>
+            </td>
+
+            <td class="price-cell" style="white-space:nowrap;">₹{{ item.price }}</td>
+
+            <td style="white-space:nowrap;">
+              <span style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--green);">
+                ₹{{ item.item_total }}
+              </span>
+            </td>
+
+            <td style="white-space:nowrap;">
+              {% with s=item.order.status|lower %}
+                {% if s == 'pending' %}
+                  <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(247,127,0,0.12);color:#f77f00;">
+                    <i class="fas fa-clock"></i> Pending
+                  </span>
+                {% elif s == 'delivered' %}
+                  <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(45,106,79,0.12);color:var(--green);">
+                    <i class="fas fa-check-circle"></i> Delivered
+                  </span>
+                {% elif s == 'cancelled' %}
+                  <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(230,57,70,0.10);color:var(--red);">
+                    <i class="fas fa-times-circle"></i> Cancelled
+                  </span>
+                {% else %}
+                  <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(122,122,140,0.10);color:var(--muted);">
+                    {{ item.order.status }}
+                  </span>
+                {% endif %}
+              {% endwith %}
+            </td>
+
+            <td>
+              {% with p=item.order.payment.status|lower %}
+                {% if p == 'completed' or p == 'paid' %}
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--green);">
+                    <i class="fas fa-check-circle"></i> Paid
+                  </span>
+                {% else %}
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--red);">
+                    <i class="fas fa-times-circle"></i> Unpaid
+                  </span>
+                {% endif %}
+              {% endwith %}
+            </td>
+
+          </tr>
+          {% empty %}
+          <tr class="empty-row">
+            <td colspan="11">
+              <i class="fas fa-bag-shopping"></i>
+              No ordered items found.
             </td>
           </tr>
           {% endfor %}

@@ -27,7 +27,7 @@
 - [x] create register view
 - [x] create login view
 - [x] create logout view
-- [] create dashboard (for admin access) -> CURD operation with products
+- [x] create dashboard (for admin access) -> CURD operation with products
 - [x] create profile view
 - [] change password
 - [] reset password

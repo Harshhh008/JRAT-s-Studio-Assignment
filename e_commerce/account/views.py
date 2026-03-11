@@ -88,6 +88,7 @@ def profile(request):
 
   return render(request, 'account/profile.html', {'user': request.user, 'user_addresses': user_addresses, 'orders': orders})
 
+@login_required(login_url='login')
 def edit_profile(request, pk):
   user = User.objects.get(id=pk)
   if request.method == "POST":

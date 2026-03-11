@@ -221,7 +221,16 @@
         <div class="card-label">Users</div>
       </div>
     </a>
-
+    <a href="{% url 'dashboard_ordered_items' %}" class="dash-card orange">
+      <div class="card-top">
+        <div class="card-icon"><i class="fas fa-bag-shopping"></i></div>
+        <span class="card-arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <div>
+        <div class="card-count">{{ order_items_count }}</div>
+        <div class="card-label">Ordered Items</div>
+      </div>
+    </a>
 
   </div>
 
