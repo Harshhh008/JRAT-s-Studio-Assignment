@@ -1,14 +1,205 @@
-{% for images in product.product_image.all %}
-<img src="{{images.image.url}}" alt="{{product.product_name}}">
-<a href="{% url 'remove_images' product.id images.id %}">Delete</a>
-{% endfor %}
-<br>
-<strong>Product Name</strong>: {{product.product_name}}<br>
-<strong>Category Name</strong>: {{product.category.category_name}}<br>
-<strong>Description </strong>: {{product.description}}<br>
-<strong>Available Stock</strong>:{% if product.stock > 0%}{{product.stock}}{% else %}Out of stock{% endif %}<br>
-<strong>Price</strong>:{{product.price}}<br>
-<a href="{% url 'add_images' product.id %}">Add Product Image</a> |
-<a href="{% url 'edit_product' product.id %}">Edit Product</a> |
-<a href="{% url 'remove_product' product.id %}">Remove Product</a> 
-{% if product.stock > 0%} | <a href="{% url 'add_to_cart' product.id %}">Add To Cart</a> {% endif %}
+{% extends "base.html" %}
+
+{% block style %}
+  /* Styling for product image */
+  .product-image {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+
+  .product-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .product-image:hover .product-img {
+    transform: scale(1.1);
+  }
+
+  .delete-image {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 50%;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .delete-image:hover {
+    background-color: red;
+    transform: scale(1.1);
+  }
+
+  /* Styling for product details */
+  .product-details {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    max-width: 850px;
+    margin: 20px auto;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+  }
+
+  .product-details h2 {
+    color: #333;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .product-details p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 15px;
+  }
+
+  .product-details p strong {
+    color: #333;
+  }
+
+  /* Styling for action buttons */
+  .product-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .product-actions a {
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    min-width: 160px;
+  }
+
+  .action-btn {
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .add-image {
+    background-color: #4CAF50;
+  }
+
+  .add-image:hover {
+    background-color: #388E3C;
+    transform: translateY(-2px);
+  }
+
+  .edit-product {
+    background-color: #ff9800;
+  }
+
+  .edit-product:hover {
+    background-color: #f57c00;
+    transform: translateY(-2px);
+  }
+
+  .remove-product {
+    background-color: #f44336;
+  }
+
+  .remove-product:hover {
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+  }
+
+  .add-to-cart {
+    background-color: #2196F3;
+  }
+
+  .add-to-cart:hover {
+    background-color: #1976d2;
+    transform: translateY(-2px);
+  }
+
+  /* Responsive design for smaller screens */
+  @media screen and (max-width: 768px) {
+    .product-details {
+      padding: 20px;
+    }
+
+    .product-img {
+      height: 180px;
+    }
+
+    .product-actions a {
+      font-size: 14px;
+      padding: 10px 20px;
+      min-width: 140px;
+    }
+
+    .delete-image {
+      top: 5px;
+      right: 5px;
+      padding: 4px 8px;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .product-details {
+      padding: 15px;
+    }
+
+    .product-img {
+      height: 150px;
+    }
+
+    .product-actions a {
+      font-size: 14px;
+      padding: 8px 15px;
+    }
+
+    .delete-image {
+      top: 5px;
+      right: 5px;
+      padding: 4px 8px;
+    }
+  }
+{% endblock style %}
+
+{% block content %}
+  {% for images in product.product_image.all %}
+    <div class="product-image">
+      <img src="{{ images.image.url }}" alt="{{ product.product_name }}" class="product-img">
+      <a href="{% url 'remove_images' product.id images.id %}" class="delete-image">X</a>
+    </div>
+  {% endfor %}
+
+  <div class="product-details">
+    <h2>{{ product.product_name }}</h2>
+    <p><strong>Category Name:</strong> {{ product.category.category_name }}</p>
+    <p><strong>Description:</strong> {{ product.description }}</p>
+    <p><strong>Available Stock:</strong> {% if product.stock > 0 %}{{ product.stock }}{% else %}Out of stock{% endif %}</p>
+    <p><strong>Price:</strong> ₹{{ product.price }}</p>
+
+    <div class="product-actions">
+      {% if request.user.is_authenticated and request.user.is_staff or request.user.is_superuser %}
+      <a href="{% url 'add_images' product.id %}" class="action-btn add-image">Add Product Image</a>
+      <a href="{% url 'edit_product' product.id %}" class="action-btn edit-product">Edit Product</a>
+      <a href="{% url 'remove_product' product.id %}" class="action-btn remove-product">Remove Product</a>
+      {% endif %}
+      {% if product.stock > 0 %}
+        <a href="{% url 'add_to_cart' product.id %}" class="action-btn add-to-cart">Add To Cart</a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock content %}

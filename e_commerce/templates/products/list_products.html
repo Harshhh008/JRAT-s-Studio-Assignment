@@ -1,35 +1,200 @@
 {% extends "base.html" %}
-{% load static %}
 {% block style %}
-<link rel="stylesheet" href="{% static 'css/product/list_product.css' %}">
+/* General styling for the page */
+.product-main {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 15px;
+  font-family: Arial, sans-serif;
+}
+
+/* Header section */
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.head .left h1 {
+  margin: 0;
+  color: #4CAF50;
+  font-size: 30px;
+}
+
+.head .right {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  background-color: #2196F3;
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  transition: 0.3s;
+  display: inline-block;
+}
+
+.action-btn:hover {
+  background-color: #1976d2;
+}
+
+.add {
+  background-color: #4CAF50;
+}
+
+.add:hover {
+  background-color: #388E3C;
+}
+
+.delete {
+  background-color: #f44336;
+}
+
+.delete:hover {
+  background-color: #d32f2f;
+}
+
+/* Product grid */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  padding: 0 15px;
+}
+
+/* Individual product card */
+.product_card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.product_card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.product_card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.product_card p {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.product_card p strong {
+  color: #333;
+}
+
+/* Buttons inside the product card */
+.product_card a {
+  text-decoration: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: 0.3s;
+  display: inline-block;
+  margin-right: 10px;
+  color: white;
+  text-align: center;
+}
+
+.view-btn {
+  background-color: #2196F3;
+}
+
+.view-btn:hover {
+  background-color: #1976d2;
+}
+
+.cart-btn {
+  background-color: #4CAF50;
+}
+
+.cart-btn:hover {
+  background-color: #388E3C;
+}
+
+/* Out of stock styling */
+.out-stock {
+  color: red;
+  font-weight: bold;
+}
+
+/* Responsive design */
+@media screen and (max-width: 600px) {
+  .head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .head .right {
+    margin-top: 10px;
+  }
+
+  .product_card {
+    padding: 15px;
+  }
+
+  .product_card img {
+    height: 180px;
+  }
+
+  .product_card p {
+    font-size: 12px;
+  }
+}
 {% endblock style %}
+
 {% block content %}
 <div class="product-main">
   <div class="head">
     <div class="left">
-      <h1>Product List {% if category_id %} - {{category_name}}{% endif %}</h1>
+      <h1>Product List {% if category_id %} - {{ category_name }}{% endif %}</h1>
     </div>
     <div class="right">
-      {% if 'category' in request.path %}<button><a href="{% url 'category_update' category_id %}">Update This Category</a> </button>
-      <button><a href="{% url 'category_delete' category_id %}">Delete This Category</a> </button>{% endif %}
-      <button><a href="{% url 'create_product' %}">Add New Product</a></button>
+      {% if 'category' in request.path %}
+        <a href="{% url 'category_update' category_id %}" class="action-btn update">Update This Category</a>
+        <a href="{% url 'category_delete' category_id %}" class="action-btn delete">Delete This Category</a>
+      {% endif %}
+      <a href="{% url 'create_product' %}" class="action-btn add">Add New Product</a>
     </div>
   </div>
-    <div class="products">
-      {% for product in products %}
+
+  <div class="products">
+    {% for product in products %}
     <div class="product_card">
-      <img src="{{product.product_image.all.0.image.url }}" alt="{{product.name}}"><br>
-      <strong>Product Name</strong>: {{product.product_name}}<br>
-      <strong>Category Name</strong>: {{product.category.category_name}}<br>
-      <strong>Description </strong>: {{product.description}}<br>
-      <strong>Available Stock</strong>:{% if product.stock > 0 %}{{product.stock}}{% else %}Out Of Stock {% endif %}<br>
-      <strong>Price</strong>:{{product.price}}<br>
-      <a href="{% url 'get_product' product.id %}">View Product Detail</a> 
-      {% if product.stock > 0 %} | <a href="{% url 'add_to_cart' product.id %}">Add to cart</a> {% endif %}
-      {% if not forloop.last %}
+      <img src="{{ product.product_image.all.0.image.url }}" alt="{{ product.product_name }}">
+      <p><strong>Product Name:</strong> {{ product.product_name }}</p>
+      <p><strong>Category Name:</strong> {{ product.category.category_name }}</p>
+      <p><strong>Description:</strong> {{ product.description|truncatechars:80 }}</p>
+      <p><strong>Available Stock:</strong> 
+        {% if product.stock > 0 %}{{ product.stock }}{% else %}<span class="out-stock">Out Of Stock</span>{% endif %}
+      </p>
+      <p><strong>Price:</strong> ₹{{ product.price }}</p>
+      <a href="{% url 'get_product' product.id %}" class="view-btn">View Product</a>
+      {% if product.stock > 0 %}
+        <a href="{% url 'add_to_cart' product.id %}" class="cart-btn">Add to Cart</a>
       {% endif %}
     </div>
-      {% endfor %}
-    </div>
+    {% endfor %}
   </div>
+</div>
 {% endblock content %}

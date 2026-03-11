@@ -3,8 +3,11 @@ from .models import Product, Category, ProductImage
 from .forms import ProductForm, CategoryForm, ProductImageForm
 from django.db.models import Count
 from django.db.models import Q
+from django.contrib.auth.decorators import permission_required, login_required
 
 
+@permission_required("product.add_category")
+@login_required(login_url='login')
 def create_category(request):
     if request.method == "POST":
         category_form = CategoryForm(request.POST)
@@ -16,6 +19,8 @@ def create_category(request):
         request, "products/category_form.html", {"category_form": category_form}
     )
 
+@permission_required("product.change_category")
+@login_required(login_url='login')
 def update_category(request, pk):
     category = get_object_or_404(Category, id=pk)
     if request.method == "POST":
@@ -25,6 +30,8 @@ def update_category(request, pk):
     category_form = CategoryForm(instance=category)
     return render(request, 'products/category_form.html', {'category_form': category_form})
 
+@permission_required("product.delete_category")
+@login_required(login_url='login')
 def delete_category(request, pk):
     category = get_object_or_404(Category, id=pk)
     try:
@@ -39,6 +46,8 @@ def delete_category(request, pk):
 
 
 
+@permission_required("product.add_product")
+@login_required(login_url='login')
 def create_product(request):
     if request.method == "POST":
         product_form = ProductForm(request.POST)
@@ -96,6 +105,8 @@ def get_product(request, pk):
     return render(request, "products/product_details.html", {"product": product})
 
 
+@permission_required("product.change_product")
+@login_required(login_url='login')
 def edit_product(request, pk):
     product = get_object_or_404(Product, id=pk)
     if request.method == "POST":
@@ -109,6 +120,8 @@ def edit_product(request, pk):
     return render(request, "products/product_form.html", {"product_form": product_form})
 
 
+@permission_required("product.delete_product")
+@login_required(login_url='login')
 def remove_product(request, pk):
     product = get_object_or_404(Product, id=pk)
     if request.method == "POST":

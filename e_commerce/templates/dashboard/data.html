@@ -1,0 +1,189 @@
+{% include "dashboard/dashboard.html" %}
+
+<style>
+/* Table styling */
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard-table th, .dashboard-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.dashboard-table th {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+}
+
+.dashboard-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.dashboard-table tr:hover {
+  background-color: #e0f7fa;
+}
+
+.dashboard-table a {
+  text-decoration: none;
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.dashboard-table a.edit {
+  color: #2196F3; /* Blue */
+}
+
+.dashboard-table a.delete {
+  color: #f44336; /* Red */
+}
+
+.fa-yes {
+  color: #28a745; /* Green check */
+}
+
+.fa-no {
+  color: #dc3545; /* Red cross */
+}
+
+.out_of_stock{
+  color: red;
+}
+</style>
+
+{% if 'main/categories' in request.path %}
+<h2>Categories</h2>
+<table class="dashboard-table">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Category Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for category in categories %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ category.category_name }}</td>
+      <td>
+        <a href="{% url 'category_update' category.id %}" class="edit"><i class="fa-solid fa-pen-to-square"></i></a>
+        <a href="{% url 'category_delete' category.id %}" class="delete"><i class="fa-solid fa-trash"></i></a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3" style="text-align:center;">No categories found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% elif 'main/products' in request.path %}
+<h2>Products</h2>
+<table class="dashboard-table">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Product Name</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Price</th>
+      <th>Description</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in products %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ product.product_name }}</td>
+      <td>{{ product.category.category_name }}</td>
+      <td>
+        {% if product.stock > 0 %}
+           {{ product.stock }}
+        {% else %}
+           <small class="out_of_stock">Out of Stock</small>
+        {% endif %}
+      </td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.description|truncatechars:50 }}</td>
+      <td>
+        <a href="{% url 'edit_product' product.id %}" class="edit"><i class="fa-solid fa-pen-to-square"></i></a>
+        <a href="{% url 'remove_product' product.id %}" class="delete"><i class="fa-solid fa-trash"></i></a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="7" style="text-align:center;">No products found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% elif 'main/users' in request.path %}
+<h2>Users</h2>
+<table class="dashboard-table">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Email</th>
+      <th>Username</th>
+      <th>Full Name</th>
+      <th>Phone</th>
+      <th>City</th>
+      <th>Staff</th>
+      <th>Admin</th>
+      <th>Is Active</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.full_name }}</td>
+      <td>{{ user.phone_number }}</td>
+      <td>
+        {% if user.address.all %}
+          {{ user.address.all.0.city }}
+        {% else %}
+          N/A
+        {% endif %}
+      </td>
+      <td>
+        {% if user.is_staff %}
+          <i class="fa-solid fa-check fa-yes"></i>
+        {% else %}
+          <i class="fa-solid fa-xmark fa-no"></i>
+        {% endif %}
+      </td>
+      <td>
+        {% if user.is_superuser %}
+          <i class="fa-solid fa-check fa-yes"></i>
+        {% else %}
+          <i class="fa-solid fa-xmark fa-no"></i>
+        {% endif %}
+      </td>
+      <td>
+        {% if user.is_active %}
+          <i class="fa-solid fa-check fa-yes"></i>
+        {% else %}
+          <i class="fa-solid fa-xmark fa-no"></i>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="10" style="text-align:center;">No users found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}

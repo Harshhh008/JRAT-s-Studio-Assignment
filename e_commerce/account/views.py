@@ -3,8 +3,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from .models import UserAddress
 from order.models import Order
+from products.models import Product, Category
 
 from .forms import UserCreationForm, AuthenticationForm, UserProfileForm, UserAddressForm
 
@@ -17,9 +19,12 @@ def user_register(request):
   if request.method == "POST":
     form = UserCreationForm(request.POST)
     if form.is_valid():
-      form.save()
+      user = form.save(commit=False)
+      # BUG: fixed is_active = True | default = False
+      user.is_active = True
+      user.save()
       messages.success(request, 'registration successful.')
-      return redirect('user_login')
+      return redirect('login')
     else:
       messages.error(request, 'something went wrong with registration')
   form = UserCreationForm()
@@ -40,17 +45,22 @@ def user_login(request):
       if not email and not password:
         messages.error(request, 'both fields are required')
 
-      user = authenticate(email=email, password=password)
+      try:
+        user = authenticate(email=email, password=password)
 
+      except Exception as e:
+        print(str(e))
       if not user:
         messages.error(request, 'invalid email or password.')
-        return redirect(f'user_login{request.user}')
+        return redirect('login')
       else:
         try:
           login(request ,user)
           if next_url:
+            print("next working)")
             return redirect(next_url)
           else:
+            print("working")
             return redirect('list_product')
         except Exception as e:
           print(str(e))

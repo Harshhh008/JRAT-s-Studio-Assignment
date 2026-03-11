@@ -28,6 +28,7 @@ class AuthenticationForm(forms.Form):
             raise forms.ValidationError("Email is required.")
         if not cleaned_data.get("password"):
             raise forms.ValidationError("Password is required.")
+        return cleaned_data
 
 class UserProfileForm(forms.ModelForm):
     class Meta:

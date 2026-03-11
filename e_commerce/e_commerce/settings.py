@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'account', # authentication
+    'dashboard',
     'products', # product data
     'utils', # utilities for automation work
     'cart',
@@ -70,7 +71,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'products.context_processors.category_list'
+                'products.context_processors.category_list',
+                'dashboard.dashboard_count.dashboard_counts'
             ],
         },
     },

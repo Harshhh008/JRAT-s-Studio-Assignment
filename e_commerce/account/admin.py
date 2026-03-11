@@ -37,6 +37,7 @@ class UserAdmin(BaseAdmin):
             },
         ),
         ("Permissions", {"fields": ("groups", "user_permissions")}),
+        ("Extra Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
         ("Important Dates", {"fields": ("created_at", "updated_at")}),
     )
     add_fieldsets = (

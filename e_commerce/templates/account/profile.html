@@ -1,55 +1,200 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-  <div class="right">
-        <strong>UserName: </strong> : {{user.username|default:''}}</br>
-        <strong>Email: </strong> : {{user.email}}</br>
-        <strong>FirstName: </strong> : {{user.first_name|default:''}}</br>
-        <strong>LastName: </strong> : {{user.last_name|default:''}}</br>
-        <strong>PhoneNumber: </strong> : {{user.phone_number|default:''}}</br>
-        <strong>Date Of Birth: </strong> : {{user.date_of_birth|default:''}}</br>
-        <a href="{% url 'edit_profile' user.id %}">Edit Profile</a>
-        <center><h4><u>Your Address</u></h4></center>
-        <a href="{% url 'add_address' %}">Add New Address</a><br>
-          {% for address in user_addresses %}
-            <u><strong>Address - {{forloop.counter}}</strong></u><br>
-            <strong>House Number: </strong> : {{address.house_num}}</br>
-            <strong>Building: </strong> : {{address.building_name}}</br>
-            <strong>Area: </strong> : {{address.area}}</br>
-            <strong>City: </strong> : {{address.city}}</br>
-            <strong>State: </strong> : {{address.state}}</br>
-            <strong>PinCode: </strong> : {{address.pincode}}</br>
-            <a href="{% url 'edit_address' address.id %} ">Edit</a>
-            {% if not foorloop.last %}
-            <hr>
-            {% endif %}
-          {% empty %}
-          <p>No Addresses</p>
-          {% endfor %}
+<style>
+/* General container */
+.container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 
-        <center><h4><u>Your Orders</u></h4></center>
-          {% for order in orders %}
-            <u><strong>Order - {{forloop.counter}}</strong></u><br>
-            <strong>Order ID: </strong> : {{order.order_id}}</br>
-            <strong>Order Status: </strong> : {{order.status}}</br>
-            <strong>Product: </strong> <br>
-            <ul>
-            {% for item in order.order_item.all %}
-            <li>{{item.product.product_name}} X <stong>{{item.quantity}}</strong> </li>
-            {% endfor %}
-            </ul>
-            <strong>Total Amount: </strong> : {{order.total_amount}}</br>
-            <strong>Shipping Address: </strong> : {{order.shipping_address}}</br>
-            <strong>Payment: </strong> : {{order.payment.status}}</br>
-            <strong>Date: </strong> : {{order.created_at}}</br>
-            {% if not foorloop.last %}
-            <hr>
-            {% endif %}
-          {% empty %}
-          <p>No Order</p>
-          {% endfor %}
+/* Sections */
+.section {
+  margin-bottom: 30px;
+}
+
+.section h2 {
+  text-align: center;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* User info card */
+.user-info {
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.user-info strong {
+  color: #333;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  margin-top: 10px;
+  margin-right: 5px;
+  padding: 8px 15px;
+  background-color: #2196F3;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background-color: #1976d2;
+}
+
+/* Add / Edit / Delete Buttons */
+.btn-add {
+  background-color: #4CAF50;
+}
+
+.btn-add:hover {
+  background-color: #388E3C;
+}
+
+.btn-edit {
+  background-color: #2196F3;
+}
+
+.btn-edit:hover {
+  background-color: #1976d2;
+}
+
+.btn-delete {
+  background-color: #f44336;
+}
+
+.btn-delete:hover {
+  background-color: #d32f2f;
+}
+
+/* Address & Orders cards */
+.card {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.card h4 {
+  margin-bottom: 10px;
+  color: #4CAF50;
+}
+
+/* Section headers */
+.section-header {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+  text-decoration: underline;
+}
+
+/* Lists inside orders */
+.card ul {
+  list-style: disc;
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.card ul li {
+  margin-bottom: 5px;
+}
+
+/* HR styling */
+.card hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 15px 0;
+}
+</style>
+
+<div class="container">
+
+  <!-- User Info -->
+  <div class="section user-info">
+    <h2>Profile</h2>
+    <p><strong>Username:</strong> {{ user.username|default:'' }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>First Name:</strong> {{ user.first_name|default:'' }}</p>
+    <p><strong>Last Name:</strong> {{ user.last_name|default:'' }}</p>
+    <p><strong>Phone:</strong> {{ user.phone_number|default:'' }}</p>
+    <p><strong>Date of Birth:</strong> {{ user.date_of_birth|default:'' }}</p>
+    <a href="{% url 'edit_profile' user.id %}" class="btn btn-edit">
+      <i class="fa-solid fa-pen-to-square"></i> Edit Profile
+    </a>
   </div>
+
+  <!-- Addresses -->
+  <div class="section">
+    <div class="section-header">Your Addresses</div>
+    <a href="{% url 'add_address' %}" class="btn btn-add">
+      <i class="fa-solid fa-plus"></i> Add New Address
+    </a>
+    {% for address in user_addresses %}
+    <div class="card">
+      <h4>Address - {{ forloop.counter }}</h4>
+      <p><strong>House Number:</strong> {{ address.house_num }}</p>
+      <p><strong>Building:</strong> {{ address.building_name }}</p>
+      <p><strong>Area:</strong> {{ address.area }}</p>
+      <p><strong>City:</strong> {{ address.city }}</p>
+      <p><strong>State:</strong> {{ address.state }}</p>
+      <p><strong>Pin Code:</strong> {{ address.pincode }}</p>
+      <a href="{% url 'edit_address' address.id %}" class="btn btn-edit">
+        <i class="fa-solid fa-pen-to-square"></i> Edit
+      </a>
+      {% if not forloop.last %}
+      <hr>
+      {% endif %}
+    </div>
+    {% empty %}
+    <p style="text-align:center;">No addresses found.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Orders -->
+  <div class="section">
+    <div class="section-header">Your Orders</div>
+    {% for order in orders %}
+    <div class="card">
+      <h4>Order - {{ forloop.counter }}</h4>
+      <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+      <p><strong>Status:</strong> {{ order.status }}</p>
+      <p><strong>Products:</strong></p>
+      <ul>
+        {% for item in order.order_item.all %}
+        <li>{{ item.product.product_name }} x <strong>{{ item.quantity }}</strong></li>
+        {% endfor %}
+      </ul>
+      <p><strong>Total Amount:</strong> {{ order.total_amount }}</p>
+      <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+      <p><strong>Payment Status:</strong> {{ order.payment.status }}</p>
+      <p><strong>Date:</strong> {{ order.created_at }}</p>
+      {% if not forloop.last %}
+      <hr>
+      {% endif %}
+    </div>
+    {% empty %}
+    <p style="text-align:center;">No orders found.</p>
+    {% endfor %}
+  </div>
+
 </div>
 
 {% endblock content%}
