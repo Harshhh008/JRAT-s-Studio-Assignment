@@ -20,11 +20,11 @@ def dashboard_categories(request):
   return render(request, 'dashboard/data.html')
 
 def dashboard_products(request):
-  products = Product.objects.all()
+  products = Product.objects.select_related('category').all()
   return render(request, 'dashboard/data.html', {'products': products})
 
 def dashboard_users(request):
-  users = User.objects.all()
+  users = User.objects.prefetch_related('address').all()
   return render(request, 'dashboard/data.html', {'users': users})
 
 def dashboard_ordered_items(request):

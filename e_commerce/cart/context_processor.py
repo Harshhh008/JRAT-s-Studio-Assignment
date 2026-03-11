@@ -5,4 +5,4 @@ def cart_count(request):
         cart = CartItem.objects.select_related('cart').filter(cart__user=request.user)
         if cart:
             count = cart.count()  
-        return {'cart_count': count}
+    return {'cart_count': count}
