@@ -102,7 +102,7 @@ def list_product(request, pk=None):
         paginator = Paginator(products, 30)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        top_selling_products = Product.objects.select_related('category').prefetch_related("product_image").order_by('-selling')[:5]
+        top_selling_products = Product.objects.select_related('category').prefetch_related("product_image").filter(selling__gt=0).order_by('-selling')[:5]
     return render(request, "products/list_products.html", {"page_obj": page_obj, "category_id": pk if pk else None, "category_name": category_name, "top_selling_products": top_selling_products})
 
 
