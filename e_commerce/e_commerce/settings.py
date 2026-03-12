@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG')
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -97,6 +97,16 @@ DATABASES = {
         'PORT':config('DB_PORT', default=5432),
     }
 }
+
+DATABASE_URL = config("DATABASE_URL", cast=str, default="")
+if DATABASE_URL:
+    import dj_database_url
+    if DATABASE_URL.startswith("postgres://") or DATABASE_URL.startswith("postgresql://"):
+        DATABASES = {
+            "default": dj_database_url.config(
+                default=DATABASE_URL
+            )
+        }
 
 
 # Password validation
