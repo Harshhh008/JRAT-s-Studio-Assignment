@@ -458,6 +458,45 @@
     .head .left h1 { font-size: 28px; }
     .products { grid-template-columns: 1fr; }
   }
+
+
+  /* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 40px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pagination a,
+.pagination .current-page {
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.pagination a {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.pagination a:hover {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+  transform: translateY(-2px);
+}
+
+.pagination .current-page {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
 {% endblock style %}
 
 {% block content %}
@@ -535,7 +574,7 @@
 
   <!-- Grid -->
   <div class="products">
-    {% for product in products %}
+    {% for product in page_obj %}
     <div class="product_card">
 
       <!-- Image -->
@@ -575,6 +614,7 @@
         </div>
       </div>
 
+
       <!-- Footer -->
       <div class="card-footer">
         <a href="{% url 'get_product' product.id %}" class="view-btn">
@@ -590,6 +630,25 @@
       </div>
     {% endfor %}
   </div>
+
+   <!-- Pagination -->
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page=1">&laquo; First</a>
+    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  {% endif %}
+
+  <span class="current-page">
+    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+  </span>
+
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+  {% endif %}
+</div>
+{% endif %}
 
 </div>
 {% endblock content %}

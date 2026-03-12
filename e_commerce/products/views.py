@@ -4,6 +4,7 @@ from .forms import ProductForm, CategoryForm, ProductImageForm
 from django.db.models import Count
 from django.db.models import Q
 from django.contrib.auth.decorators import permission_required, login_required
+from django.core.paginator import Paginator
 
 
 @permission_required("product.add_category")
@@ -88,6 +89,9 @@ def list_product(request, pk=None):
             .prefetch_related("product_image")
             .filter(category__id=pk).order_by('-created_at')
         )
+        paginator = Paginator(products, 30)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         category_name = Category.objects.get(id=pk)
     else:
         products = (
@@ -95,8 +99,11 @@ def list_product(request, pk=None):
             .prefetch_related("product_image")
             .order_by('-created_at')
         )
+        paginator = Paginator(products, 30)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         top_selling_products = Product.objects.select_related('category').prefetch_related("product_image").order_by('-selling')[:5]
-    return render(request, "products/list_products.html", {"products": products, "category_id": pk if pk else None, "category_name": category_name, "top_selling_products": top_selling_products})
+    return render(request, "products/list_products.html", {"page_obj": page_obj, "category_id": pk if pk else None, "category_name": category_name, "top_selling_products": top_selling_products})
 
 
 def get_product(request, pk):

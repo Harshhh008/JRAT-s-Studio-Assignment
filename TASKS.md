@@ -29,8 +29,8 @@
 - [x] create logout view
 - [x] create dashboard (for admin access) -> CURD operation with products
 - [x] create profile view
-- [] change password
-- [] reset password
+- [x] change password
+- [x] reset password
 
 ## Debug and auto reload setup
 
@@ -87,6 +87,7 @@
 
 
 ## pagination
+- [x] pagination in list product 
 
 ## messages for every view (success or failed)
 
@@ -94,3 +95,5 @@
 
 - [x] total sale
 - [x] top products
+
+# handle form errors
