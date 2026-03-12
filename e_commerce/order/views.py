@@ -8,7 +8,7 @@ from utils.email import purchase_success_email
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-login_required(login_url='login')
+@login_required(login_url='login')
 def create_order_from_cart(request):
   cart = Cart.objects.get(user=request.user)
   address = UserAddress.objects.filter(user=request.user).first()
@@ -25,12 +25,12 @@ def create_order_from_cart(request):
     messages.success(request, 'order created successfully.')
     return redirect('checkout_order', order_id=order.order_id)
 
-login_required(login_url='login')
+@login_required(login_url='login')
 def checkout_order(request, order_id):
   order = Order.objects.get(order_id=order_id)
   return render(request, 'order/checkout.html', {'order_id': order_id, 'total_amount': order.total_amount})
   
-login_required(login_url='login')
+@login_required(login_url='login')
 def payments(request):
   body = json.loads(request.body)
   order = Order.objects.get(order_id=body['orderID'])
@@ -81,7 +81,7 @@ def payments(request):
 
   return JsonResponse(data)
 
-login_required(login_url='login')
+@login_required(login_url='login')
 def order_complete(request):
   order_id = request.GET.get('order_number')
   payment_id = request.GET.get('payment_id')

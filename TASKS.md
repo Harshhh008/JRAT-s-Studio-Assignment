@@ -74,8 +74,8 @@
 - [x] view cart functionality
 - [x] add to cart product functionality
 - [x] delete product from cart functionality
-- [] session based cart # bug : item total and total not working
-- [] udate cart_item after login or register
+- [x] session based cart # fixed : item total and total not working 
+- [x] update cart_item after login or register
 
 ## Order Functionality
 

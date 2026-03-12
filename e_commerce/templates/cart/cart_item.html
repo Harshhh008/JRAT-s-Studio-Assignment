@@ -264,7 +264,11 @@
   <!-- Cart Summary -->
   {% if cart_items %}
     <div class="cart-summary">
+      {% if request.user.is_authenticated %}
       <h2>Subtotal: ₹{{ cart.total|floatformat:2 }}</h2>
+      {% else %}
+      <h2>Subtotal: ₹{{ total|floatformat:2 }}</h2>
+      {% endif %}
       <a href="{% url 'create_order' %}" class="checkout-btn">Proceed to Checkout →</a>
     </div>
   {% endif %}

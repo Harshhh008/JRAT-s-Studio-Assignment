@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Cart, CartItem, Product
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 
@@ -18,16 +17,19 @@ def cart_view(request):
     else:
         session_cart = request.session.get("cart", {})
         cart_items = []
+        total = 0
 
         for pid, item in session_cart.items():
             product = get_object_or_404(Product, id=pid)
+            item_total = item["quantity"] * float(product.price)
+            total += item_total
             cart_items.append({
                 "product": product,
                 "quantity": item["quantity"],
-                "price": item["price"]
+                "item_total": item_total,
             })
 
-        return render(request, "cart/cart_item.html", {"cart_items": cart_items})
+        return render(request, "cart/cart_item.html", {"cart_items": cart_items, 'total': total})
 
 def add_to_cart(request, pk):
     """
@@ -62,10 +64,9 @@ def add_to_cart(request, pk):
 
         if product_id in cart:
             cart[product_id]['quantity'] += 1
-            cart[product_id]['item_total'] = float(product.price * cart[product_id]['quantity'])
         else:
             cart[product_id] = {'quantity':1}
-            cart[product_id]['item_total'] = float(product.price * cart[product_id]['quantity'])
+        cart[product_id]['item_total'] = float(product.price) * cart[product_id]['quantity']
         request.session['cart'] = cart
         request.session.modified = True
         return redirect('cart_view')

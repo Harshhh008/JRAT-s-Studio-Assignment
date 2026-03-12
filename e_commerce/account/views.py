@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from .models import UserAddress
 from order.models import Order
+from cart.models import Cart, CartItem
 
 from .forms import UserCreationForm, AuthenticationForm, UserProfileForm, UserAddressForm, ForgotPasswordForm
 from utils.email import send_reset_password_email
@@ -24,9 +25,7 @@ def user_register(request):
   if request.method == "POST":
     form = UserCreationForm(request.POST)
     if form.is_valid():
-      user = form.save(commit=False)
-      user.is_active = True
-      user.save()
+      form.save()
       messages.success(request, 'registration successful.')
       return redirect('login')
     else:
@@ -49,9 +48,16 @@ def user_login(request):
       if not email and not password:
         messages.error(request, 'both fields are required')
 
-      try:
-        user = authenticate(email=email, password=password)
+      user = User.objects.filter(email=email).first()
 
+      if not user:
+        messages.error(request, "No user found with this email.")
+        return redirect('login')
+      else:
+        user.is_active = True
+        user.save()
+      try:
+          user = authenticate(email=email, password=password)
       except Exception as e:
         print(str(e))
       if not user:
@@ -59,6 +65,28 @@ def user_login(request):
         return redirect('login')
       else:
         try:
+
+          # merge cart items with database before user logged in
+          session_cart = request.session.get('cart', {})
+          cart, _ = Cart.objects.get_or_create(user=user)
+          if session_cart:
+            for product_id, item in session_cart.items():
+              try:
+                from products.models import Product
+                product = Product.objects.get(id=product_id)
+              except Product.DoesNotExist:
+                continue
+              cart_item, created = CartItem.objects.get_or_create(product=product, cart=cart)
+              if not created:
+                cart_item.quantity += item['quantity']
+              else:
+                cart_item.quantity = item['quantity']
+              cart_item.save()
+              # remove all items from the session
+              request.session.flush()
+              request.session.modified = True
+            
+
           login(request ,user)
           messages.success(request, 'logged in successfully.')
           if next_url:
@@ -77,9 +105,13 @@ def user_logout(request):
   """user logout logic"""
   try:
     logout(request)
+    user = User.objects.get(email=request.user.email)
+    print(user)
+    if not user.is_superuser or not user.is_staff:
+      user.is_active=False
+      user.save()
   except Exception as e:
     print(str(e))
-  else:
     messages.success(request, "you have logged out successfully.")
     return redirect('login')
 

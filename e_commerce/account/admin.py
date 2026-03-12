@@ -33,7 +33,7 @@ class UserAdmin(BaseAdmin):
         (
             "Personal Details",
             {
-                "fields": ("username", "phone_number", "date_of_birth"),
+                "fields": ("username","first_name","last_name", "phone_number", "date_of_birth"),
             },
         ),
         ("Permissions", {"fields": ("groups", "user_permissions")}),
