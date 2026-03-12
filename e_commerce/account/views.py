@@ -68,8 +68,8 @@ def user_login(request):
 
           # merge cart items with database before user logged in
           session_cart = request.session.get('cart', {})
-          cart, _ = Cart.objects.get_or_create(user=user)
           if session_cart:
+            cart, _ = Cart.objects.get_or_create(user=user)
             for product_id, item in session_cart.items():
               try:
                 from products.models import Product
@@ -86,7 +86,6 @@ def user_login(request):
               request.session.flush()
               request.session.modified = True
             
-
           login(request ,user)
           messages.success(request, 'logged in successfully.')
           if next_url:
@@ -110,10 +109,10 @@ def user_logout(request):
     if not user.is_superuser or not user.is_staff:
       user.is_active=False
       user.save()
-  except Exception as e:
-    print(str(e))
     messages.success(request, "you have logged out successfully.")
     return redirect('login')
+  except Exception as e:
+    print(str(e))
 
 @login_required(login_url='login')
 def profile(request):
