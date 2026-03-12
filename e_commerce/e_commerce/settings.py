@@ -161,10 +161,7 @@ STATICFILES_DIRS = [
 
 # Media Configuration
 MEDIA_URL = '/media/'
-if not DEBUG:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'app/media')
-else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = config('MEDIA_VOLUME_PATH', default=os.path.join(BASE_DIR, 'media'))
 
 
 # Global config for custom user model
