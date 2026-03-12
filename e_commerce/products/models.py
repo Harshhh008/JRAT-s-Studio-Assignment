@@ -27,7 +27,7 @@ class BaseModel(models.Model):
 class Category(BaseModel):
     """store category"""
 
-    category_name = models.CharField(unique=True)
+    category_name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.category_name
