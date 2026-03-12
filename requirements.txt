@@ -8,10 +8,12 @@ Django==6.0.3
 django-browser-reload==1.21.0
 django-debug-toolbar==6.2.0
 django-paypal==2.1
+gunicorn==25.1.0
 h11==0.16.0
 httpcore==1.0.9
 httpx==0.28.1
 idna==3.11
+packaging==26.0
 pillow==12.1.1
 psycopg2==2.9.11
 pydantic==2.12.5
