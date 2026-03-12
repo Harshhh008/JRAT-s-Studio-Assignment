@@ -30,6 +30,9 @@ DEBUG = config('DEBUG', cast=bool)
 
 if not DEBUG:
     ALLOWED_HOSTS = ['.railway.app']
+    CSRF_TRUSTED_ORIGINS = [
+    "https://*.railway.app"
+    ]
 else:
     ALLOWED_HOSTS = []
 
