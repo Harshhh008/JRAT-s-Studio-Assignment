@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import permission_required, login_required
 from django.core.paginator import Paginator
 
 
-@permission_required("product.add_category")
 @login_required(login_url='login')
+@permission_required("products.add_category", raise_exception=True)
 def create_category(request):
     if request.method == "POST":
         category_form = CategoryForm(request.POST)
@@ -20,8 +20,8 @@ def create_category(request):
         request, "products/category_form.html", {"category_form": category_form}
     )
 
-@permission_required("product.change_category")
 @login_required(login_url='login')
+@permission_required("products.change_category", raise_exception=True)
 def update_category(request, pk):
     category = get_object_or_404(Category, id=pk)
     if request.method == "POST":
@@ -31,8 +31,8 @@ def update_category(request, pk):
     category_form = CategoryForm(instance=category)
     return render(request, 'products/category_form.html', {'category_form': category_form})
 
-@permission_required("product.delete_category")
 @login_required(login_url='login')
+@permission_required("products.delete_category", raise_exception=True)
 def delete_category(request, pk):
     category = get_object_or_404(Category, id=pk)
     try:
@@ -47,8 +47,8 @@ def delete_category(request, pk):
 
 
 
-@permission_required("product.add_product")
 @login_required(login_url='login')
+@permission_required("products.add_product", raise_exception=True)
 def create_product(request):
     if request.method == "POST":
         product_form = ProductForm(request.POST)
@@ -114,8 +114,8 @@ def get_product(request, pk):
     return render(request, "products/product_details.html", {"product": product})
 
 
-@permission_required("product.change_product")
 @login_required(login_url='login')
+@permission_required("products.change_product", raise_exception=True)
 def edit_product(request, pk):
     product = get_object_or_404(Product, id=pk)
     if request.method == "POST":
@@ -129,8 +129,8 @@ def edit_product(request, pk):
     return render(request, "products/product_form.html", {"product_form": product_form})
 
 
-@permission_required("product.delete_product")
 @login_required(login_url='login')
+@permission_required("products.delete_product", raise_exception=True)
 def remove_product(request, pk):
     product = get_object_or_404(Product, id=pk)
     if request.method == "POST":

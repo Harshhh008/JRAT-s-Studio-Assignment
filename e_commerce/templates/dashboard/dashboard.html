@@ -355,6 +355,8 @@
 
 <div class="dashboard-wrap">
 
+  {% if request.user.is_superuser or request.user.is_staff %}
+
   <!-- Header -->
   <div class="dash-header">
     <p>Admin Panel</p>
@@ -490,4 +492,5 @@
   </div>
 
 </div>
+  {% endif %}
 {% endblock content %}
