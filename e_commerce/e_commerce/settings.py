@@ -108,12 +108,14 @@ WSGI_APPLICATION = 'e_commerce.wsgi.application'
 DATABASE_URL = config("DATABASE_URL", cast=str, default="")
 if DATABASE_URL:
     import dj_database_url
-    if DATABASE_URL.startswith("postgres://") or DATABASE_URL.startswith("postgresql://"):
-        DATABASES = {
-            "default": dj_database_url.config(
-                default=DATABASE_URL
-            )
-        }
+
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
