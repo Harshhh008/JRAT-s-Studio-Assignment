@@ -34,9 +34,7 @@ urlpatterns = [
 # paypal
 urlpatterns += path('paypal/', include('paypal.standard.ipn.urls')),
 
-path('media/', include([
-    re_path(r'^(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-])),
+re_path(r'^(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 
 if getattr(settings, 'DEBUG'):
     from debug_toolbar.toolbar import debug_toolbar_urls
