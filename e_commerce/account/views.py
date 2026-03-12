@@ -104,9 +104,9 @@ def user_login(request):
 def user_logout(request):
   """user logout logic"""
   try:
+    user = request.user
     logout(request)
-    user = User.objects.get(email=request.user.email)
-    print(user)
+    user = User.objects.get(email=user.email or None)
     if not user.is_superuser or not user.is_staff:
       user.is_active=False
       user.save()
