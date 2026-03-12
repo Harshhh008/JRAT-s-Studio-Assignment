@@ -25,7 +25,6 @@ def user_register(request):
     form = UserCreationForm(request.POST)
     if form.is_valid():
       user = form.save(commit=False)
-      # BUG: fixed is_active = True | default = False
       user.is_active = True
       user.save()
       messages.success(request, 'registration successful.')
@@ -61,6 +60,7 @@ def user_login(request):
       else:
         try:
           login(request ,user)
+          messages.success(request, 'logged in successfully.')
           if next_url:
             return redirect(next_url)
           else:
@@ -68,7 +68,7 @@ def user_login(request):
         except Exception as e:
           print(str(e))
     else:
-      print(form.errors)
+      messages.error(request, "something went wrong.")
   form = AuthenticationForm()
   return render(request, 'account/login.html', {'form': form})
 
@@ -101,6 +101,7 @@ def edit_profile(request, pk):
       data = profile_form.save(commit=False)
       data.user = request.user
       data.save()
+      messages.success(request, "Your profile is updated.")
       return redirect('profile')
   profile_form = UserProfileForm(instance=user)
   return render(request, 'account/profile_edit.html', {'profile_form': profile_form})
@@ -112,6 +113,7 @@ def add_address(request):
       data = address_form.save(commit=False)
       data.user = request.user
       data.save()
+      messages.success(request, 'New address added successfully.')
       return redirect('profile')
 
   address_form = UserAddressForm()
@@ -125,6 +127,7 @@ def edit_address(request, pk):
       data = address_form.save(commit=False)
       data.user = request.user
       data.save()
+      messages.success(request, 'Your address updated successfully.')
       return redirect('profile')
   address_form = UserAddressForm(instance=address)
   return render(request, 'account/address_form.html', {'address_form': address_form})
@@ -184,6 +187,6 @@ def change_password(request):
       except Exception as e:
         print(str(e))
     else:
-      print(form.errors)
+      messages.error(request, "Something wrong. Please try again.")
   form = PasswordChangeForm(user=request.user)
   return render(request, 'account/password_change.html', {'form': form})

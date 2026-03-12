@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from account.models import UserAddress
 from utils.email import purchase_success_email
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 login_required(login_url='login')
 def create_order_from_cart(request):
@@ -18,6 +19,7 @@ def create_order_from_cart(request):
     total_amount = cart.total,
     status="pending"
   )
+  messages.success(request, 'order created successfully.')
   return redirect('checkout_order', order_id=order.order_id)
 
 login_required(login_url='login')
@@ -88,6 +90,7 @@ def order_complete(request):
 
     #send email
     purchase_success_email(request.user.email)
+    messages.success(request, "Payment successfully. you can check your order confirm message in your email.")
   except Exception as e:
     print(str(e))
   return render(request, 'order/order-complete.html', {'order_items': order_items,'order_id': order_id, 'payment_id': payment_id})

@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Cart, CartItem, Product
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 def cart_view(request):
@@ -43,6 +44,7 @@ def add_to_cart(request, pk):
         )
 
         if cart_item_created:
+            messages.success(request, f'{product} added into cart.')
             return redirect('cart_view')
 
         if not cart_item_created:
@@ -86,6 +88,7 @@ def remove_from_cart(request, pk):
             return redirect("cart_view")
         else:
             cart_item.delete()
+            messages.success(request, f"{cart_item} removed successfully.")
             return redirect("cart_view")
     else:
         cart = request.session.get('cart', {})
@@ -101,6 +104,3 @@ def remove_from_cart(request, pk):
         request.session['cart'] =cart
         request.session.modified = True
         return redirect('cart_view')
-
-
-        

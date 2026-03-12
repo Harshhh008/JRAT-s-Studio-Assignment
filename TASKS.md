@@ -91,6 +91,8 @@
 
 ## messages for every view (success or failed)
 
+- [x] messages
+
 ## analytics (total sale, top products)
 
 - [x] total sale
