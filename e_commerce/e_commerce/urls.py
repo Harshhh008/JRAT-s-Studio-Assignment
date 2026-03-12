@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.static import serve
@@ -22,22 +23,25 @@ from django.conf.urls.static import static
 from .views import home
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', home),
-    path('accounts/', include('account.urls')),
-    path('dashboard/', include('dashboard.urls')),
-    path('product/', include('products.urls')),
-    path('cart/', include('cart.urls')),
-    path('order/', include('order.urls')),
+    path("admin/", admin.site.urls),
+    path("", home),
+    path("accounts/", include("account.urls")),
+    path("dashboard/", include("dashboard.urls")),
+    path("product/", include("products.urls")),
+    path("cart/", include("cart.urls")),
+    path("order/", include("order.urls")),
 ]
 
 # paypal
-urlpatterns += path('paypal/', include('paypal.standard.ipn.urls')),
+urlpatterns += (path("paypal/", include("paypal.standard.ipn.urls")),)
 
-re_path(r'^(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+urlpatterns += (
+    re_path(r"^(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
+)
 
-if getattr(settings, 'DEBUG'):
+if getattr(settings, "DEBUG"):
     from debug_toolbar.toolbar import debug_toolbar_urls
+
     urlpatterns += debug_toolbar_urls()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += path("__reload__/", include("django_browser_reload.urls")),
+    urlpatterns += (path("__reload__/", include("django_browser_reload.urls")),)
