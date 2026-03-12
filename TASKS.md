@@ -99,3 +99,9 @@
 - [x] top products
 
 ## handle form errors
+
+- [x] handle form errors
+
+## Postgres setup 
+
+- [x] postgres setup done

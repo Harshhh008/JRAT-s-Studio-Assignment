@@ -25,7 +25,6 @@ class User(AbstractBaseUser, PermissionsMixin):
   USERNAME_FIELD = 'email'
 
   class Meta:
-    db_table = 'user'
     ordering = ['-created_at']
   
   objects = CustomManager()
