@@ -11,16 +11,19 @@ from django.contrib import messages
 login_required(login_url='login')
 def create_order_from_cart(request):
   cart = Cart.objects.get(user=request.user)
-  address = UserAddress.objects.filter(user=request.user).first().full_address
-
-  order = Order.objects.create(
-    user = request.user,
-    shipping_address=address,
-    total_amount = cart.total,
-    status="pending"
-  )
-  messages.success(request, 'order created successfully.')
-  return redirect('checkout_order', order_id=order.order_id)
+  address = UserAddress.objects.filter(user=request.user).first()
+  if address is None:
+    messages.warning(request, 'add at least one address where you want your product.')
+    return redirect('profile')
+  else:
+    order = Order.objects.create(
+      user = request.user,
+      shipping_address=address.full_address,
+      total_amount = cart.total,
+      status="pending"
+    )
+    messages.success(request, 'order created successfully.')
+    return redirect('checkout_order', order_id=order.order_id)
 
 login_required(login_url='login')
 def checkout_order(request, order_id):
