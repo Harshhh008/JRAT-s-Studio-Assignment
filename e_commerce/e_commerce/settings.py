@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
 if not DEBUG:
-    ALLOWED_HOSTS = ['.railway.app/']
+    ALLOWED_HOSTS = ['.railway.app']
 else:
     ALLOWED_HOSTS = []
 
