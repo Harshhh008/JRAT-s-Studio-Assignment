@@ -18,9 +18,11 @@
 
 `pip install django-browser-reload` # for auto reloading django pages if any changes occurs
 
+
 ### Step 2 : Project Setup.
 
 1. account -> which is contains all authentication related logics
 2. products -> which is contains all product related logics
 3. cart -> which is contains all cart related logics
-4. order -> which is contains order related logics
+4. order -> which is contains order related logics and payments
+5. dashboard -> for admin user and staff
