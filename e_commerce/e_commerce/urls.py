@@ -20,14 +20,12 @@ from django.urls import path, include, re_path
 from django.views.static import serve
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import home
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", home),
+    path("", include("products.urls")),
     path("accounts/", include("account.urls")),
     path("dashboard/", include("dashboard.urls")),
-    path("product/", include("products.urls")),
     path("cart/", include("cart.urls")),
     path("order/", include("order.urls")),
 ]

@@ -1,0 +1,181 @@
+
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
+    :root {
+      --bg: #f4f1ec;
+      --card-bg: #ffffff;
+      --green: #2d6a4f;
+      --green-light: #40916c;
+      --red: #e63946;
+      --text: #1a1a2e;
+      --muted: #7a7a8c;
+      --border: #e8e4dc;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    /* Subtle dot-grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, #c8c2b4 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.45;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card-bg);
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+      padding: 56px 52px 48px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Icon */
+    .icon-wrap {
+      width: 80px;
+      height: 80px;
+      background: rgba(230,57,70,0.10);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(230,57,70,0.18); }
+      50%       { box-shadow: 0 0 0 14px rgba(230,57,70,0); }
+    }
+
+    .icon-wrap i {
+      font-size: 34px;
+      color: var(--red);
+    }
+
+    /* Code */
+    .error-code {
+      font-family: 'Playfair Display', serif;
+      font-size: 80px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -2px;
+      margin-bottom: 6px;
+    }
+
+    .error-code span { color: var(--red); }
+
+    /* Title */
+    .error-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    /* Message */
+    .error-msg {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 36px;
+    }
+
+    /* Divider */
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: var(--red);
+      border-radius: 2px;
+      margin: 0 auto 32px;
+      opacity: 0.5;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg);
+      border-color: #ccc;
+      transform: translateY(-2px);
+    }
+
+    /* Footer note */
+    .footer-note {
+      margin-top: 28px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-note a {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .footer-note a:hover { text-decoration: underline; }
+
+    @media (max-width: 480px) {
+      .card { padding: 40px 24px 36px; }
+      .error-code { font-size: 60px; }
+    }

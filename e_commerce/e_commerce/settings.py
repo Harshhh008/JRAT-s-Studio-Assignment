@@ -153,10 +153,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # for production statics
+STATIC_ROOT = config("STATIC_ROOT_PATH", default = os.path.join(BASE_DIR, 'staticfiles'))
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    config("STATIC_VOLUME_PATH", default = os.path.join(BASE_DIR, 'static'))
 ]
 
 # Media Configuration
@@ -212,4 +212,13 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
+}
+
+#caching
+CACHE = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": 'student_cache',
+        "TIMEOUT": 60*60*24,
+  }
 }

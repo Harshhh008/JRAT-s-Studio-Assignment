@@ -52,11 +52,14 @@ def delete_category(request, pk):
 def create_product(request):
     if request.method == "POST":
         product_form = ProductForm(request.POST)
-        if product_form.is_valid():
+        product_image_form = ProductImageForm(request.POST, request.FILES)
+        if product_form.is_valid() and product_image_form.is_valid():
             product_form.save()
+            product_image_form.save()
             return redirect("create_product")
     product_form = ProductForm()
-    return render(request, "products/product_form.html", {"product_form": product_form})
+    product_image_form = ProductImageForm()
+    return render(request, "products/product_form.html", {"product_form": product_form, 'product_image_form': product_image_form})
 
 
 def add_images(request, pk=None):

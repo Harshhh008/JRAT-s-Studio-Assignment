@@ -48,7 +48,7 @@ def user_login(request):
       if not email and not password:
         messages.error(request, 'both fields are required')
 
-      user = User.objects.filter(email=email).first()
+      user = User.objects.get(email=email)
 
       if not user:
         messages.error(request, "No user found with this email.")
@@ -56,16 +56,12 @@ def user_login(request):
       else:
         user.is_active = True
         user.save()
-      try:
-          user = authenticate(email=email, password=password)
-      except Exception as e:
-        print(str(e))
+      user = authenticate(email=email, password=password)
       if not user:
         messages.error(request, 'invalid email or password.')
         return redirect('login')
       else:
         try:
-
           # merge cart items with database before user logged in
           session_cart = request.session.get('cart', {})
           if session_cart:

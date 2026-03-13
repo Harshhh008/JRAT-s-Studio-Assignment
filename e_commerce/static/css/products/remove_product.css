@@ -1,0 +1,181 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f4f1ec;
+    --card-bg: #ffffff;
+    --green: #2d6a4f;
+    --red: #e63946;
+    --text: #1a1a2e;
+    --muted: #7a7a8c;
+    --border: #e8e4dc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); font-family: 'DM Sans', sans-serif; }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, #c8c2b4 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 22px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 36px rgba(0,0,0,0.09);
+    padding: 48px 44px 40px;
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Icon */
+  .icon-wrap {
+    width: 76px;
+    height: 76px;
+    background: rgba(230,57,70,0.10);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0   rgba(230,57,70,0.18); }
+    50%       { box-shadow: 0 0 0 12px rgba(230,57,70,0); }
+  }
+
+  .icon-wrap i { font-size: 30px; color: var(--red); }
+
+  /* Title */
+  .card h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  /* Divider */
+  .divider {
+    width: 40px;
+    height: 3px;
+    background: var(--red);
+    border-radius: 2px;
+    margin: 0 auto 18px;
+    opacity: 0.5;
+  }
+
+  /* Message */
+  .card p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  /* Product name highlight */
+  .product-name {
+    display: inline-block;
+    background: rgba(230,57,70,0.08);
+    color: var(--red);
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(230,57,70,0.18);
+    margin: 4px 0 22px;
+  }
+
+  /* Warning note */
+  .warning-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(230,57,70,0.06);
+    border: 1px solid rgba(230,57,70,0.15);
+    border-radius: 10px;
+    padding: 11px 14px;
+    margin-bottom: 28px;
+    text-align: left;
+  }
+
+  .warning-note i { color: var(--red); font-size: 14px; flex-shrink: 0; }
+  .warning-note span { font-size: 13px; color: var(--red); font-weight: 500; line-height: 1.45; }
+
+  /* Buttons */
+  .btn-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    padding: 12px 26px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    flex: 1;
+    justify-content: center;
+  }
+
+  .btn-danger {
+    background: var(--red);
+    color: white;
+  }
+
+  .btn-danger:hover {
+    background: #c1121f;
+    transform: translateY(-2px);
+  }
+
+  .btn-cancel {
+    background: transparent;
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    box-shadow: none;
+  }
+
+  .btn-cancel:hover {
+    background: var(--bg);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 36px 22px 30px; }
+    .btn-group { flex-direction: column; }
+  }
