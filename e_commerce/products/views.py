@@ -54,8 +54,10 @@ def create_product(request):
         product_form = ProductForm(request.POST)
         product_image_form = ProductImageForm(request.POST, request.FILES)
         if product_form.is_valid() and product_image_form.is_valid():
-            product_form.save()
-            product_image_form.save()
+            product= product_form.save()
+            product_image = product_image_form.save(commit=False)
+            product_image.product = product
+            product_image.save()
             return redirect("create_product")
     product_form = ProductForm()
     product_image_form = ProductImageForm()
