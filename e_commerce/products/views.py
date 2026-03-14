@@ -149,4 +149,4 @@ def search_product(request):
         Q(product_name__icontains=q) |
         Q(category__category_name__icontains=q) 
     )
-    return render(request, 'products/list_products.html', {'products': products})
+    return render(request, 'products/list_products.html', {'page_obj': products})
